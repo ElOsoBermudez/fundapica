@@ -6,11 +6,11 @@ export default function BackofficePanelPage() {
       <Card>
         <CardHeader>
           <CardTitle>Backoffice</CardTitle>
-          <CardDescription>Acceso concedido (modo temporal sin autenticación real).</CardDescription>
+          <CardDescription>Acceso concedido (modo temporal sin autenticacion real).</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Cualquier usuario y contraseña con contenido permiten entrar.
+            Cualquier usuario y contrasena con contenido permiten entrar.
           </p>
         </CardContent>
       </Card>

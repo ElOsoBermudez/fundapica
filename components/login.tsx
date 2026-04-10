@@ -23,7 +23,7 @@ const Login = () => {
     }
 
     setError("");
-    router.push("/backoffice/panel");
+    router.push("/backend/backoffice/panel");
   };
 
   return (

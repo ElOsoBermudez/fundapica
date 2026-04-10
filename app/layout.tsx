@@ -33,7 +33,7 @@ export default function RootLayout({
                   Fundapica
                 </Link>
                 <Link
-                  href="/backoffice"
+                  href="/backend/backoffice"
                   className={buttonVariants({ variant: "outline", size: "sm" })}
                 >
                   Backoffice
