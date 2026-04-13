@@ -1,29 +1,81 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
+
+import {
+  getDefaultRedirectPath,
+  getSafeRedirectPath,
+} from "@/lib/auth/roles";
+import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import type { AppRole, Profile } from "@/lib/supabase/types";
+import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Logo } from "@/components/logo";
 
 const Login = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const routeError =
+    searchParams.get("reason") === "auth-required"
+      ? "Inicia sesion para continuar."
+      : "";
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!email.trim() || !password.trim()) {
-      setError("Completa usuario y contraseña para continuar.");
+      setError("Completa email y contrasena para continuar.");
       return;
     }
 
+    setLoading(true);
     setError("");
-    router.push("/backend/backoffice/panel");
+
+    const supabase = createBrowserSupabaseClient();
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+
+    if (signInError || !data.user) {
+      setLoading(false);
+      setError(signInError?.message ?? "No se pudo iniciar sesion.");
+      return;
+    }
+
+    const profileResult = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", data.user.id)
+      .maybeSingle();
+
+    const profile = profileResult.data as Pick<Profile, "role"> | null;
+    const profileError = profileResult.error;
+
+    if (profileError) {
+      setLoading(false);
+      setError("Se inicio sesion, pero no se pudo cargar el perfil.");
+      return;
+    }
+
+    const fallbackPath = getDefaultRedirectPath(
+      (profile?.role as AppRole | undefined) ?? "user",
+    );
+    const redirectPath = getSafeRedirectPath(
+      searchParams.get("next"),
+      fallbackPath,
+    );
+
+    router.replace(redirectPath);
+    router.refresh();
   };
 
   return (
@@ -35,7 +87,7 @@ const Login = () => {
             Log in to Shadcn UI Blocks
           </p>
 
-          <Button className="mt-8 w-full gap-3">
+          <Button className="mt-8 w-full gap-3" disabled={loading} type="button">
             <GoogleLogo />
             Continue with Google
           </Button>
@@ -67,9 +119,11 @@ const Login = () => {
                 value={password}
               />
             </div>
-            {error ? <p className="text-sm text-destructive">{error}</p> : null}
-            <Button className="mt-4 w-full" type="submit">
-              Continue with Email
+            {error || routeError ? (
+              <p className="text-sm text-destructive">{error || routeError}</p>
+            ) : null}
+            <Button className="mt-4 w-full" disabled={loading} type="submit">
+              {loading ? "Signing in..." : "Continue with Email"}
             </Button>
           </form>
 
@@ -89,9 +143,11 @@ const Login = () => {
           </div>
         </div>
         <div className="relative hidden max-w-xl grow lg:block">
-          <img
+          <Image
             alt="Login"
             className="absolute inset-0 size-full rounded-xl object-cover"
+            fill
+            sizes="(min-width: 1024px) 50vw, 100vw"
             src="/images/ascii-art.png"
           />
         </div>

@@ -1,5 +1,8 @@
+import { redirectAuthenticatedUser } from "@/lib/auth/server";
 import Login from "@/components/login";
 
-export default function BackofficePage() {
+export default async function BackofficePage() {
+  await redirectAuthenticatedUser();
+
   return <Login />;
 }
