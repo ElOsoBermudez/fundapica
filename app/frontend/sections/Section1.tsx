@@ -1,19 +1,38 @@
-﻿export default function Section1() {
+﻿import SlideTextButton from "@/components/kokonutui/slide-text-button"
+
+export default function Section1() {
   return (
     <section
-      className="h-screen min-h-[600px] w-screen min-w-[1200px] overflow-hidden bg-white"
+      className="min-h-[600px] w-screen min-w-[1200px] overflow-hidden bg-white"
       style={{
+        height: "calc(100svh - 4rem)",
         backgroundImage: "url('/background-home.webp')",
         backgroundPosition: "right center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "auto 100%",
       }}
     >
-      <div className="flex h-full w-full">
-        <div className="flex w-1/2 items-start px-8 pt-24 sm:px-12 sm:pt-28 lg:px-16 lg:pt-32 xl:px-20 xl:pt-36">
-          <h1 className="max-w-[8ch] text-4xl font-bold leading-[0.95] text-[#E05780] sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-[6rem]">
-            Formación personalizada para llegar más lejos
-          </h1>
+      <div className="mx-auto flex h-full w-full max-w-[1200px]">
+        <div className="flex w-1/2 items-start pt-16 sm:pt-20 lg:pt-24 xl:pt-28">
+          <div className="w-full max-w-[32rem] space-y-6 pl-6 sm:pl-8 lg:pl-10">
+            <h1
+              className="max-w-[10ch] font-bold text-[#E05780] sm:text-5xl lg:text-6xl xl:text-[4.75rem] 2xl:text-[6rem]"
+              style={{ lineHeight: "0.8em", letterSpacing: "-0.03em", fontSize: "7.4em" }}
+            >
+              <span className="block whitespace-nowrap">Formación<br/>
+              personalizada<br/>
+              para llegar<br/>
+             más lejos</span>
+            </h1>
+            <p className="text-2xl font-medium text-[#75A5E3] sm:text-3xl lg:text-4xl">
+              Academia Fundapica
+            </p>
+            <SlideTextButton
+              href="#"
+              text="Empieza ahora"
+              className="mt-24 !min-w-0 bg-[#E05780] text-[#fafafa] hover:bg-[#d14d74]"
+            />
+          </div>
         </div>
         <div className="w-1/2" aria-hidden="true" />
       </div>
