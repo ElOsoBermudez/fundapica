@@ -43,19 +43,71 @@ const courseCatalog: Record<CourseType, CourseCategory[]> = {
           image: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
         },
         {
-          title: "Trabajo en equipo",
+          title: "Habilidades sociales de comunicación y resolución de conflictos en el centro de trabajo",
           description: "Dinamicas para colaborar mejor, escuchar activamente y coordinar objetivos comunes.",
-          badge: "Colaboración",
+          badge: "ADGD151PO",
           image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
         },
         {
-          title: "Resolucion de conflictos",
+          title: "Hablar en público: presentaciones eficaces",
           description: "Herramientas para gestionar conversaciones dificiles y buscar acuerdos utiles.",
-          badge: "Soft Skills",
+          badge: "ADGD152PO",
           image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
         },
+        {
+          title: "Comunicación y trabajo en equipo en hostelería",
+          description: "Herramientas para gestionar conversaciones dificiles y buscar acuerdos utiles.",
+          badge: "ADGD10",
+          image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
+        },
+        {
+          title: "Habilidades sociales: Comunicación, inteligencia emocional y trabajo en equipo",
+          description: "Herramientas para gestionar conversaciones dificiles y buscar acuerdos utiles.",
+          badge: "ADGD149PO",
+          image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
+        },
+        {
+          title: "Técnicas para hablar en público",
+          description: "Herramientas para gestionar conversaciones dificiles y buscar acuerdos utiles.",
+          badge: "ADGD261PO",
+          image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
+        },
+        {
+          title: "Trabajo en equipo",
+          description: "Herramientas para gestionar conversaciones dificiles y buscar acuerdos utiles.",
+          badge: "ADGD265PO",
+          image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
+        },
+        {
+          title: "Inteligencia emocional en la empresa y gestión de cualidades",
+          description: "Herramientas para gestionar conversaciones dificiles y buscar acuerdos utiles.",
+          badge: "ADGD167PO",
+          image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
+        },
+        {
+          title: "Inglés elemental para el departamento de pisos",
+          description: "Herramientas para gestionar conversaciones dificiles y buscar acuerdos utiles.",
+          badge: "FCOE01",
+          image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
+        },
+        {
+          title: "Atención al cliente en inglés en el servicio de restauración",
+          description: "Herramientas para gestionar conversaciones dificiles y buscar acuerdos utiles.",
+          badge: "FCOE02",
+          image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
+        },
+        {
+          title: "Agente de igualdad",
+          description: "Herramientas para gestionar conversaciones dificiles y buscar acuerdos utiles.",
+          badge: "SSCE0001",
+          image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df",
+        },
+
+
       ],
     },
+
+    /////////////////////////   GESTIÓN PERSONAL   ////////////////////// 
 
     {
       slug: "gestion-personal",
@@ -63,25 +115,33 @@ const courseCatalog: Record<CourseType, CourseCategory[]> = {
       description: "Contenidos para organizacion, autonomia, foco y desarrollo de habitos.",
       courses: [
         {
-          title: "Organizacion del tiempo",
+          title: "Mediación y resolución de conflictos",
           description: "Metodos practicos para priorizar tareas y reducir la sensacion de saturacion.",
-          badge: "Productividad",
+          badge: "ADGD178PO",
           image: "https://images.unsplash.com/photo-1506784365847-bbad939e9335",
         },
         {
-          title: "Habitos sostenibles",
+          title: "Gestión de las emociones",
           description: "Rutinas simples para mantener constancia y mejorar tu dia a dia.",
-          badge: "Bienestar",
+          badge: "ADGD123PO",
           image: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88",
         },
         {
-          title: "Productividad consciente",
+          title: "Gestión del tiempo",
           description: "Estrategias para avanzar con foco sin perder bienestar personal.",
-          badge: "Foco",
+          badge: "ADGD135PO",
+          image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644",
+        },
+        {
+          title: "Aprender a aprender",
+          description: "Estrategias para avanzar con foco sin perder bienestar personal.",
+          badge: "FCOV36",
           image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644",
         },
       ],
     },
+
+      /////////////////////////   LABORAL   ////////////////////// 
 
     {
       slug: "laboral",
@@ -89,13 +149,49 @@ const courseCatalog: Record<CourseType, CourseCategory[]> = {
       description: "Formacion orientada a empleabilidad, adaptacion al entorno profesional y mejora continua.",
       courses: [
         {
-          title: "Preparacion para entrevistas",
+          title: "Telemarketing",
           description: "Claves para presentar tu perfil con confianza y responder con criterio.",
           badge: "Empleo",
           image: "https://images.unsplash.com/photo-1521791136064-7986c2920216",
         },
         {
-          title: "Marca profesional",
+          title: "Atención al cliente y calidad de servicio",
+          description: "Como ordenar tu experiencia y comunicar mejor tu propuesta de valor.",
+          badge: "Career",
+          image: "https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5",
+        },
+        {
+          title: "Inserción laboral, sensibilización medioambiental y en la igualdad de género",
+          description: "Bases para desenvolverte en herramientas y dinamicas habituales del trabajo actual.",
+          badge: "Digital",
+          image: "https://images.unsplash.com/photo-1553877522-43269d4ea984",
+        },
+        {
+          title: "Básico de prevención de riesgos laborales",
+          description: "Claves para presentar tu perfil con confianza y responder con criterio.",
+          badge: "Empleo",
+          image: "https://images.unsplash.com/photo-1521791136064-7986c2920216",
+        },
+        {
+          title: "Igualdad de género en el ámbito laboral",
+          description: "Como ordenar tu experiencia y comunicar mejor tu propuesta de valor.",
+          badge: "Career",
+          image: "https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5",
+        },
+        {
+          title: "Fundraising, captación de fondos para entidades sociales",
+          description: "Bases para desenvolverte en herramientas y dinamicas habituales del trabajo actual.",
+          badge: "Digital",
+          image: "https://images.unsplash.com/photo-1553877522-43269d4ea984",
+        },
+        {
+          title: "Emprendimiento: Nociones",
+          description: "Claves para presentar tu perfil con confianza y responder con criterio.",
+          badge: "Empleo",
+          image: "https://images.unsplash.com/photo-1521791136064-7986c2920216",
+        },
+        {
+          title: "Comunicación y trabajo en equipo en hostelería",
           description: "Como ordenar tu experiencia y comunicar mejor tu propuesta de valor.",
           badge: "Career",
           image: "https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5",
@@ -108,6 +204,8 @@ const courseCatalog: Record<CourseType, CourseCategory[]> = {
         },
       ],
     },
+
+      /////////////////////////   IGUALDAD   ////////////////////// 
 
     {
       slug: "igualdad",
@@ -134,6 +232,8 @@ const courseCatalog: Record<CourseType, CourseCategory[]> = {
         },
       ],
     },
+
+      /////////////////////////   INFORMÁTICA   ////////////////////// 
 
     {
       slug: "competencias-digitales",
