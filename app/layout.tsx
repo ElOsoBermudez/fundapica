@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono, Montserrat } from "next/font/google"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -17,6 +17,11 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-body",
+})
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -26,7 +31,13 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", geistSans.variable, fontMono.variable, "font-sans")}
+      className={cn(
+        "antialiased",
+        geistSans.variable,
+        fontMono.variable,
+        montserrat.variable,
+        "font-sans",
+      )}
     >
       <body>
         <ThemeProvider>
