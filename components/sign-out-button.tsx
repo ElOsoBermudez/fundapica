@@ -27,7 +27,7 @@ export function SignOutButton() {
       type="button"
       variant="outline"
     >
-      {loading ? "Cerrando sesion..." : "Cerrar sesion"}
+      {loading ? "Cerrando sesión..." : "Cerrar sesión"}
     </Button>
   );
 }
