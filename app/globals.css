@@ -104,3 +104,24 @@
     @apply font-sans;
     }
 }
+
+/* Lenis needs the document height to remain flexible when it takes over scroll. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+/* Disable native smooth scrolling so Lenis is the only scroll animator running. */
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+/* Keep nested scroll areas predictable if any component opts out via data-lenis-prevent. */
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Prevent page scroll when Lenis intentionally stops the document. */
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
