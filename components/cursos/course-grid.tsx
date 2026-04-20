@@ -1,9 +1,16 @@
 import Link from "next/link"
-import { ChevronLeft } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import type { CourseCategory, CourseType } from "@/components/cursos/data"
-import { buttonVariants } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button, buttonVariants } from "@/components/ui/button"
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
 type CourseGridProps = {
@@ -44,19 +51,44 @@ export function CourseGrid({ type, eyebrow, category }: CourseGridProps) {
         </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {category.courses.map((course) => (
-            <Card
-              key={course.title}
-              className="h-full rounded-3xl border border-border/70 bg-background shadow-sm"
-            >
-              <CardHeader className="px-6 pt-6">
-                <CardTitle className="text-xl font-semibold">{course.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="px-6 pb-6">
-                <p className="text-sm leading-7 text-muted-foreground">{course.description}</p>
-              </CardContent>
-            </Card>
-          ))}
+          {category.courses.map((course) => {
+            const imageSrc =
+              course.image ??
+              `https://placehold.co/960x600/e5e7eb/111827?text=${encodeURIComponent(course.title)}`
+            const imageAlt = `Imagen de apoyo para el curso ${course.title}`
+            const badge = course.badge ?? category.title
+
+            return (
+              <Card
+                key={course.title}
+                className="h-full rounded-3xl border border-border/70 bg-background pt-0 shadow-sm"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                  <img src={imageSrc} alt={imageAlt} className="h-full w-full object-cover" />
+                </div>
+                <CardHeader className="gap-2 px-5 pt-5">
+                  <div className="mb-1">
+                    <Badge
+                      variant="secondary"
+                      className="rounded-full px-3 py-1 text-[11px] uppercase"
+                    >
+                      {badge}
+                    </Badge>
+                  </div>
+                  <CardTitle className="text-xl font-semibold">{course.title}</CardTitle>
+                  <CardDescription className="text-sm leading-7 text-muted-foreground">
+                    {course.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardFooter className="mt-auto justify-start border-t border-border/60 bg-background px-5 py-4">
+                  <Button variant="outline" size="lg" className="rounded-xl">
+                    Ver curso
+                    <ChevronRight className="size-4" />
+                  </Button>
+                </CardFooter>
+              </Card>
+            )
+          })}
         </div>
       </div>
     </section>
