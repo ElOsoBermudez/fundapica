@@ -42,7 +42,7 @@ export function CoursesHeroSelector() {
                 </div>
                 <div className="space-y-2">
                   <CardTitle className="text-2xl font-semibold">{audience.title}</CardTitle>
-                  <CardDescription className="max-w-xl text-base leading-7">
+                  <CardDescription className="max-w-xl text-base leading-6">
                     {audience.description}
                   </CardDescription>
                 </div>
@@ -51,7 +51,7 @@ export function CoursesHeroSelector() {
               <CardContent className="px-6 pb-2 sm:px-8">
                 <ul className="space-y-3">
                   {audience.points.map((point) => (
-                    <li key={point} className="flex items-start gap-3 text-sm text-muted-foreground">
+                    <li key={point} className="flex items-start gap-3 text-sm leading-6 text-muted-foreground">
                       <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-secondary text-foreground">
                         <Check className="size-3.5" />
                       </span>

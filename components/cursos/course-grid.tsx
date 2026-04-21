@@ -76,7 +76,7 @@ export function CourseGrid({ type, eyebrow, category }: CourseGridProps) {
                     </Badge>
                   </div>
                   <CardTitle className="text-xl font-semibold">{course.title}</CardTitle>
-                  <CardDescription className="text-sm leading-7 text-muted-foreground">
+                  <CardDescription className="text-sm leading-6 text-muted-foreground">
                     {course.description}
                   </CardDescription>
                 </CardHeader>

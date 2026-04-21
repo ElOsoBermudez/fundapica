@@ -1,5 +1,6 @@
 .footer {
   position: relative;
+  margin-top: 5.5rem;
   background: #eafcfc;
   color: #111111;
   padding: 7rem 1.5rem 1.75rem;
@@ -160,6 +161,7 @@
 
 @media (max-width: 768px) {
   .footer {
+    margin-top: 4rem;
     padding: 5.75rem 1.25rem 1.5rem;
   }
 

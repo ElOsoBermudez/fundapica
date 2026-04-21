@@ -19,9 +19,6 @@ export function CourseCategoryGrid({
   subtitle,
   categories,
 }: CategoryGridProps) {
-  const gridClassName =
-    categories.length === 5 ? "md:grid-cols-2 xl:grid-cols-5" : "md:grid-cols-2 xl:grid-cols-4"
-
   return (
     <section className="mx-auto flex min-h-[calc(100svh-4.5rem)] w-full max-w-6xl flex-col justify-center px-4 py-16 sm:px-6 lg:py-24">
       <div className="w-full">
@@ -41,17 +38,27 @@ export function CourseCategoryGrid({
           <p className="mt-4 text-base leading-7 text-muted-foreground sm:text-lg">{subtitle}</p>
         </div>
 
-        <div className={cn("mt-14 grid gap-6", gridClassName)}>
-          {categories.map((category) => (
+        <div
+          className={cn(
+            "mt-14 grid gap-6",
+            categories.length >= 3 ? "md:grid-cols-2 xl:grid-cols-6" : "md:grid-cols-2"
+          )}
+        >
+          {categories.map((category, index) => (
             <Card
               key={category.slug}
-              className="h-full rounded-3xl border border-border/70 bg-background shadow-sm"
+              className={cn(
+                "h-full rounded-3xl border border-border/70 bg-background shadow-sm",
+                categories.length >= 3 && "xl:col-span-2",
+                categories.length === 5 && index === 3 && "xl:col-start-2",
+                categories.length === 5 && index === 4 && "xl:col-start-4"
+              )}
             >
               <CardHeader className="px-6 pt-6">
                 <CardTitle className="text-xl font-semibold">{category.title}</CardTitle>
               </CardHeader>
               <CardContent className="px-6 pb-6">
-                <p className="text-sm leading-7 text-muted-foreground">{category.description}</p>
+                <p className="text-sm leading-6 text-muted-foreground">{category.description}</p>
               </CardContent>
               <CardFooter className="mt-auto justify-start border-t border-border/60 bg-background px-6 py-5">
                 <Link

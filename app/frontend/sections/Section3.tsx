@@ -1,4 +1,7 @@
-import { Button } from "@/components/ui/button"
+import Link from "next/link"
+
+import { buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 export default function Section3() {
   return (
@@ -18,18 +21,19 @@ export default function Section3() {
               Formación pensada para crecer
             </p>
             <p className="mt-8 max-w-[54ch] font-[family:var(--font-body)] text-[18px] font-normal leading-8 text-black/65">
-              Creamos itinerarios formativos cercanos y prácticos para
-              acompañar a cada persona en su desarrollo profesional, reforzar
-              sus competencias y abrir nuevas oportunidades dentro del mundo
-              laboral.
+              Creamos itinerarios formativos cercanos y prácticos para acompañar a cada
+              persona en su desarrollo profesional, reforzar sus competencias y abrir nuevas
+              oportunidades dentro del mundo laboral.
             </p>
-            <Button
-              variant="default"
-              size="sm"
-              className="mt-8 h-9 rounded-xl bg-[#75A5E3] px-4 text-[14px] font-medium text-white hover:bg-[#6796d2]"
+            <Link
+              href="/frontend/cursos/personas"
+              className={cn(
+                buttonVariants({ variant: "default", size: "sm" }),
+                "mt-8 h-9 rounded-xl bg-[#75A5E3] px-4 text-[14px] font-medium text-white hover:bg-[#6796d2]"
+              )}
             >
               Saber más
-            </Button>
+            </Link>
           </div>
         </div>
 
@@ -39,17 +43,22 @@ export default function Section3() {
               Empresas
             </h2>
             <p className="mt-3 font-sans text-[34px] font-normal leading-none tracking-[-0.07em] text-[#75A5E3] sm:text-[40px] lg:text-[48px]">
-             Formación para impulsar tu organización</p>
-            <p className="mt-8 max-w-[54ch] font-[family:var(--font-body)] text-[18px] font-normal leading-8 text-black/65">
-            Diseñamos formación práctica y adaptada a las necesidades de cada empresa para fortalecer equipos, mejorar sus competencias y aumentar su impacto en el entorno laboral y en los resultados del negocio.
+              Formación para impulsar tu organización
             </p>
-            <Button
-              variant="default"
-              size="sm"
-              className="mt-8 h-9 rounded-xl bg-[#75A5E3] px-4 text-[14px] font-medium text-white hover:bg-[#6796d2]"
+            <p className="mt-8 max-w-[54ch] font-[family:var(--font-body)] text-[18px] font-normal leading-8 text-black/65">
+              Diseñamos formación práctica y adaptada a las necesidades de cada empresa para
+              fortalecer equipos, mejorar sus competencias y aumentar su impacto en el entorno
+              laboral y en los resultados del negocio.
+            </p>
+            <Link
+              href="/frontend/cursos/empresas"
+              className={cn(
+                buttonVariants({ variant: "default", size: "sm" }),
+                "mt-8 h-9 rounded-xl bg-[#75A5E3] px-4 text-[14px] font-medium text-white hover:bg-[#6796d2]"
+              )}
             >
               Saber más
-            </Button>
+            </Link>
           </div>
 
           <div

@@ -28,7 +28,7 @@ export default function Section1() {
               Academia Fundapica
             </p>
             <SlideTextButton
-              href="#"
+              href="/frontend/cursos"
               text="Empieza ahora"
               className="mt-24 !min-w-0 bg-[#E05780] text-[#fafafa] hover:bg-[#d14d74]"
             />
