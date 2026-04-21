@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 
 import { buttonVariants } from "@/components/ui/button"
@@ -8,10 +9,15 @@ export default function Section3() {
     <section className="w-full bg-white px-6 py-24 sm:px-8 lg:px-10 lg:py-28">
       <div className="mx-auto flex max-w-[1200px] flex-col gap-24">
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
-          <div
-            className="aspect-[1.02/1] w-full max-w-[460px] justify-self-start rounded-[36px] bg-[#f6f7fb]"
-            aria-hidden="true"
-          />
+          <div className="relative aspect-[1.02/1] w-full max-w-[460px] justify-self-start overflow-hidden rounded-[36px] bg-[#f6f7fb] shadow-[0_18px_40px_rgba(17,17,17,0.08)]">
+            <Image
+              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1000&q=80"
+              alt="Formación para personas"
+              fill
+              sizes="(max-width: 1024px) 100vw, 40vw"
+              className="object-cover"
+            />
+          </div>
 
           <div className="flex flex-col items-start text-left lg:pl-4">
             <h2 className="font-sans text-[64px] font-extrabold leading-none tracking-[-0.055em] text-[#E05780] sm:text-[76px] lg:text-[90px]">
@@ -61,10 +67,15 @@ export default function Section3() {
             </Link>
           </div>
 
-          <div
-            className="aspect-[1.02/1] w-full max-w-[460px] justify-self-start rounded-[36px] bg-[#f6f7fb] lg:justify-self-end"
-            aria-hidden="true"
-          />
+          <div className="relative aspect-[1.02/1] w-full max-w-[460px] justify-self-start overflow-hidden rounded-[36px] bg-[#f6f7fb] shadow-[0_18px_40px_rgba(17,17,17,0.08)] lg:justify-self-end">
+            <Image
+              src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1000&q=80"
+              alt="Formación para empresas"
+              fill
+              sizes="(max-width: 1024px) 100vw, 40vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </div>
     </section>

@@ -1,18 +1,26 @@
+import Image from "next/image"
+
 const sections = [
   {
     title: "Compromiso",
     description:
-      "Acompañamos el desarrollo personal con formación práctica y cercana para mejorar la empleabilidad."
+      "Acompañamos el desarrollo personal con formación práctica y cercana para mejorar la empleabilidad.",
+    image:
+      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80",
   },
   {
     title: "Cursos",
     description:
       "Acompañamos el desarrollo con formación práctica y cercana para mejorar la empleabilidad.",
+    image:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
   },
   {
     title: "Oportunidad",
     description:
-      "Impulsamos formación conectada al mercado laboral para crecer profesionalmente."
+      "Impulsamos formación conectada al mercado laboral para crecer profesionalmente.",
+    image:
+      "https://images.unsplash.com/photo-1573496799515-eebbb63814f2?auto=format&fit=crop&w=900&q=80",
   },
 ]
 
@@ -36,10 +44,15 @@ export default function Section2() {
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-12">
           {sections.map((section) => (
             <div key={section.title} className="flex flex-col items-center text-center">
-              <div
-                className="mb-8 h-52 w-52 rounded-full border border-dashed border-black/15 bg-[#f8fafc] sm:h-56 sm:w-56"
-                aria-hidden="true"
-              />
+              <div className="relative mb-8 h-52 w-52 overflow-hidden rounded-full border border-black/10 bg-[#f8fafc] shadow-[0_10px_30px_rgba(17,17,17,0.06)] sm:h-56 sm:w-56">
+                <Image
+                  src={section.image}
+                  alt={section.title}
+                  fill
+                  sizes="(max-width: 768px) 208px, 224px"
+                  className="object-cover"
+                />
+              </div>
               <h3 className="mb-4 font-sans text-[40px] font-normal text-[#75A5E3] sm:text-[44px] lg:text-[48px]">
                 {section.title}
               </h3>
