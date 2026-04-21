@@ -1,4 +1,4 @@
-export type DashboardMainView = "dashboard" | "content" | "media" | "settings"
+export type DashboardMainView = "dashboard" | "noticias" | "cursos" | "content" | "media" | "settings"
 
 export type ContentSectionKey = "news" | "blog" | "courses"
 

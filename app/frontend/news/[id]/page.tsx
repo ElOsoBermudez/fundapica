@@ -69,7 +69,10 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
               <h1 className="font-sans text-4xl font-extrabold tracking-[-0.05em] text-[#E05780] sm:text-6xl">
                 {article.title}
               </h1>
-              <p className="font-[family:var(--font-body)] text-[18px] leading-8 text-black/65">
+              <div className="py-5">
+                <div className="h-[0.5px] bg-[#E05780]" />
+              </div>
+              <p className="font-[family:var(--font-body)] text-[18px] leading-[1.3em] text-black/65">
                 {article.description}
               </p>
             </div>
@@ -77,7 +80,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
             <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
               <div className="space-y-6">
                 {article.content.map((paragraph) => (
-                  <p key={paragraph} className="font-[family:var(--font-body)] text-[17px] leading-8 text-black/75">
+                  <p key={paragraph} className="font-[family:var(--font-body)] text-[17px] leading-[1.3em] text-black/75">
                     {paragraph}
                   </p>
                 ))}
