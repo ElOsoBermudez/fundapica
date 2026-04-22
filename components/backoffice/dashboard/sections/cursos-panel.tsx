@@ -2,7 +2,6 @@
 
 import FileUploadList4 from "@/components/file-upload-list-4"
 import { createBrowserSupabaseClient } from "@/lib/supabase/client"
-import type { CategoriaCurso } from "@/lib/supabase/types"
 import { AlertDialog } from "@base-ui/react/alert-dialog"
 import { motion } from "motion/react"
 import { PlusCircle, Pencil, Trash2 } from "lucide-react"
@@ -25,11 +24,27 @@ const RichTextEditor = dynamic(
 const ALLOWED_TYPES = ["image/jpg", "image/jpeg", "image/png", "image/webp"]
 const MAX_SIZE = 5 * 1024 * 1024
 
+type TipoCurso = "personas" | "empresas" | "ambos"
+type TipoCategoria = "personas" | "empresas"
+
+const TIPO_LABELS: Record<TipoCurso, string> = {
+  personas: "Personas",
+  empresas: "Empresas",
+  ambos: "Ambos",
+}
+
+type CategoriaCurso = {
+  id: string
+  nombre: string
+  tipo: TipoCategoria
+}
+
 type CursoCard = {
   id: string
   titulo: string
   descripcion: string
   contenido: string
+  tipo: TipoCurso | null
   categoria: string | null
   categoria_id: string | null
   imagen_url: string | null
@@ -39,8 +54,11 @@ type CursoCard = {
 
 export function CursosPanel() {
   const [categorias, setCategorias] = useState<CategoriaCurso[]>([])
+  const [tipo, setTipo] = useState<TipoCurso | null>(null)
   const [categoriaId, setCategoriaId] = useState<string | null>(null)
   const [nuevaCategoria, setNuevaCategoria] = useState("")
+  // cuando el curso es "ambos", el usuario elige a qué tipo pertenece la nueva categoría
+  const [tipoNuevaCategoria, setTipoNuevaCategoria] = useState<TipoCategoria>("personas")
   const [titulo, setTitulo] = useState("")
   const [descripcion, setDescripcion] = useState("")
   const [contenido, setContenido] = useState("")
@@ -50,7 +68,7 @@ export function CursosPanel() {
   const [cursos, setCursos] = useState<CursoCard[]>([])
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editorKey, setEditorKey] = useState(0)
-  const [filtroCategoria, setFiltroCategoria] = useState<string>("todas")
+  const [filtroTipo, setFiltroTipo] = useState<string>("todos")
   const [filtroFecha, setFiltroFecha] = useState<string>("recientes")
   const [pagina, setPagina] = useState(1)
   const POR_PAGINA = 4
@@ -64,12 +82,12 @@ export function CursosPanel() {
       .order("nombre")
       .then(({ data, error }) => {
         if (error) toast.error("Error al cargar categorías")
-        if (data) setCategorias(data)
+        if (data) setCategorias(data as CategoriaCurso[])
       })
 
     supabase
       .from("cursos")
-      .select("*, categorias_cursos(nombre)")
+      .select("*, categorias_cursos(nombre, tipo)")
       .order("created_at", { ascending: false })
       .then(({ data }) => {
         if (data) {
@@ -78,6 +96,7 @@ export function CursosPanel() {
             titulo: c.titulo,
             descripcion: c.descripcion ?? "",
             contenido: c.contenido ?? "",
+            tipo: (c.tipo as TipoCurso) ?? null,
             categoria: (c.categorias_cursos as unknown as { nombre: string } | null)?.nombre ?? null,
             categoria_id: c.categoria_id,
             imagen_url: c.imagen_url,
@@ -90,10 +109,30 @@ export function CursosPanel() {
       })
   }, [])
 
+  // Categorías visibles según el tipo de curso seleccionado
+  const categoriasFiltradas = tipo === null
+    ? []
+    : tipo === "ambos"
+      ? categorias
+      : categorias.filter((c) => c.tipo === tipo)
+
+  // Al cambiar tipo, resetear categoría si ya no aplica
+  const handleTipoChange = (v: string) => {
+    const nuevo = (v as TipoCurso) || null
+    setTipo(nuevo)
+    if (nuevo !== "ambos" && nuevo !== null) {
+      const sigue = categorias.find(c => c.id === categoriaId && c.tipo === nuevo)
+      if (!sigue) setCategoriaId(null)
+    } else {
+      setCategoriaId(null)
+    }
+  }
+
   const resetForm = () => {
     setTitulo("")
     setDescripcion("")
     setContenido("")
+    setTipo(null)
     setCategoriaId(null)
     setImageUrl(null)
     setEditingId(null)
@@ -121,15 +160,16 @@ export function CursosPanel() {
 
   const handleCrearCategoria = async () => {
     const nombre = nuevaCategoria.trim()
-    if (!nombre) return
+    if (!nombre || !tipo) return
+    const tipoCat: TipoCategoria = tipo === "ambos" ? tipoNuevaCategoria : tipo
     const supabase = createBrowserSupabaseClient()
     const { data, error } = await supabase
       .from("categorias_cursos")
-      .insert({ nombre })
+      .insert({ nombre, tipo: tipoCat })
       .select()
       .single()
     if (!error && data) {
-      setCategorias((prev) => [...prev, data].sort((a, b) => a.nombre.localeCompare(b.nombre)))
+      setCategorias((prev) => [...prev, data as CategoriaCurso].sort((a, b) => a.nombre.localeCompare(b.nombre)))
       setCategoriaId(data.id as string)
       setNuevaCategoria("")
       toast.success(`Categoría "${nombre}" creada`)
@@ -143,6 +183,7 @@ export function CursosPanel() {
     setTitulo(curso.titulo)
     setDescripcion(curso.descripcion)
     setContenido(curso.contenido)
+    setTipo(curso.tipo)
     setCategoriaId(curso.categoria_id)
     setImageUrl(curso.imagen_url)
     setEditorKey((k) => k + 1)
@@ -174,6 +215,7 @@ export function CursosPanel() {
           titulo: titulo.trim(),
           descripcion: descripcion.trim() || null,
           contenido: contenido || null,
+          tipo: tipo ?? null,
           categoria_id: categoriaId ?? null,
           imagen_url: imageUrl || null,
         })
@@ -186,6 +228,7 @@ export function CursosPanel() {
             titulo: titulo.trim(),
             descripcion: descripcion.trim(),
             contenido,
+            tipo,
             categoria: categorias.find(cat => cat.id === categoriaId)?.nombre ?? null,
             categoria_id: categoriaId,
             imagen_url: imageUrl,
@@ -202,6 +245,7 @@ export function CursosPanel() {
           titulo: titulo.trim(),
           descripcion: descripcion.trim() || null,
           contenido: contenido || null,
+          tipo: tipo ?? null,
           categoria_id: categoriaId ?? null,
           imagen_url: imageUrl || null,
         })
@@ -214,6 +258,7 @@ export function CursosPanel() {
           titulo: titulo.trim(),
           descripcion: descripcion.trim(),
           contenido,
+          tipo,
           categoria: categorias.find(cat => cat.id === categoriaId)?.nombre ?? null,
           categoria_id: categoriaId,
           imagen_url: imageUrl,
@@ -230,7 +275,7 @@ export function CursosPanel() {
   }
 
   const cursosFiltrados = cursos
-    .filter((c) => filtroCategoria === "todas" || c.categoria_id === filtroCategoria)
+    .filter((c) => filtroTipo === "todos" || c.tipo === filtroTipo)
     .sort((a, b) => filtroFecha === "antiguas" ? a.created_at.localeCompare(b.created_at) : b.created_at.localeCompare(a.created_at))
   const totalPaginas = Math.ceil(cursosFiltrados.length / POR_PAGINA)
   const cursosPagina = cursosFiltrados.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA)
@@ -242,42 +287,90 @@ export function CursosPanel() {
           {editingId ? "Editar curso" : "Crear nuevo curso"}
         </h2>
         <FileUploadList4 onValueChange={handleFilesChange} />
-        <div className="mt-4 flex items-center gap-3">
-          <span className="text-sm text-muted-foreground whitespace-nowrap">Elige una categoría</span>
-          <div className="w-44">
-            <Select value={categoriaId} onValueChange={(v) => setCategoriaId(v ?? null)}>
+
+        {/* Fila 1: tipo de audiencia */}
+        <div className="mt-4 flex items-center gap-3 flex-wrap">
+          <span className="text-sm text-muted-foreground whitespace-nowrap">¿Es para personas o empresas?</span>
+          <div className="w-40">
+            <Select value={tipo ?? ""} onValueChange={handleTipoChange}>
               <SelectTrigger className="bg-black text-[#fafafa] [&>svg]:text-[#fafafa] [&_span]:text-[#fafafa]">
-                <SelectValue placeholder="Categoría">
-                  {categoriaId ? (categorias.find(c => c.id === categoriaId)?.nombre ?? "Categoría") : null}
+                <SelectValue placeholder="Seleccionar">
+                  {tipo ? TIPO_LABELS[tipo] : null}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-black text-[#fafafa] [&_*]:text-[#fafafa] [&_[data-highlighted]]:bg-white/10">
-                {categorias.length === 0 ? (
-                  <div className="px-3 py-2 text-xs text-white/50">Sin categorías aún</div>
-                ) : (
-                  categorias.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>{cat.nombre}</SelectItem>
-                  ))
-                )}
+                <SelectItem value="personas">Personas</SelectItem>
+                <SelectItem value="empresas">Empresas</SelectItem>
+                <SelectItem value="ambos">Ambos</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <span className="text-sm text-muted-foreground whitespace-nowrap">o crea una</span>
-          <input
-            type="text"
-            value={nuevaCategoria}
-            onChange={(e) => setNuevaCategoria(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") handleCrearCategoria() }}
-            placeholder="Nueva categoría"
-            className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-          />
-          <button
-            onClick={handleCrearCategoria}
-            className="flex items-center gap-1.5 h-9 rounded-md bg-black px-3 py-1 text-sm text-[#fafafa] shadow-sm hover:bg-black/80"
-          >
-            <PlusCircle className="size-4" />Crear
-          </button>
         </div>
+
+        {/* Fila 2: categoría (solo visible si hay tipo seleccionado) */}
+        {tipo && (
+          <div className="mt-3 flex items-center gap-3 flex-wrap">
+            <span className="text-sm text-muted-foreground whitespace-nowrap">Categoría</span>
+            <div className="w-44">
+              <Select value={categoriaId ?? ""} onValueChange={(v) => setCategoriaId(v || null)}>
+                <SelectTrigger className="bg-black text-[#fafafa] [&>svg]:text-[#fafafa] [&_span]:text-[#fafafa]">
+                  <SelectValue placeholder="Elige categoría">
+                    {categoriaId ? (categoriasFiltradas.find(c => c.id === categoriaId)?.nombre ?? "Elige categoría") : null}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent className="bg-black text-[#fafafa] [&_*]:text-[#fafafa] [&_[data-highlighted]]:bg-white/10">
+                  {categoriasFiltradas.length === 0 ? (
+                    <div className="px-3 py-2 text-xs text-white/50">Sin categorías aún</div>
+                  ) : (
+                    categoriasFiltradas.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        {cat.nombre}
+                        {tipo === "ambos" && (
+                          <span className="ml-1 text-white/40">({cat.tipo})</span>
+                        )}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+            <span className="text-sm text-muted-foreground whitespace-nowrap">o crea una</span>
+            {/* Si el curso es "ambos", mostrar selector de a qué tipo pertenece la nueva categoría */}
+            {tipo === "ambos" && (
+              <div className="w-32">
+                <Select
+                  value={tipoNuevaCategoria}
+                  onValueChange={(v) => setTipoNuevaCategoria(v as TipoCategoria)}
+                >
+                  <SelectTrigger className="bg-black text-[#fafafa] [&>svg]:text-[#fafafa] [&_span]:text-[#fafafa] h-9 text-xs">
+                    <SelectValue>
+                      {tipoNuevaCategoria === "personas" ? "Personas" : "Empresas"}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent className="bg-black text-[#fafafa] [&_*]:text-[#fafafa] [&_[data-highlighted]]:bg-white/10">
+                    <SelectItem value="personas">Personas</SelectItem>
+                    <SelectItem value="empresas">Empresas</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            <input
+              type="text"
+              value={nuevaCategoria}
+              onChange={(e) => setNuevaCategoria(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") handleCrearCategoria() }}
+              placeholder="Nueva categoría"
+              className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            />
+            <button
+              onClick={handleCrearCategoria}
+              className="flex items-center gap-1.5 h-9 rounded-md bg-black px-3 py-1 text-sm text-[#fafafa] shadow-sm hover:bg-black/80"
+            >
+              <PlusCircle className="size-4" />Crear
+            </button>
+          </div>
+        )}
+
         <div className="mt-4">
           <p className="mb-1 text-sm font-medium">Título</p>
           <input
@@ -319,9 +412,11 @@ export function CursosPanel() {
           )}
         </div>
       </div>
+
       <div className="hidden lg:block px-[15px]">
         <div className="h-full w-px bg-[#0a0a0a]" style={{ minHeight: "100%" }} />
       </div>
+
       <div className="flex-1 flex flex-col gap-3">
         {uploading && (
           <p className="text-sm text-muted-foreground">Subiendo imagen...</p>
@@ -329,14 +424,14 @@ export function CursosPanel() {
 
         <div className="flex gap-2 flex-wrap">
           <select
-            value={filtroCategoria}
-            onChange={(e) => { setFiltroCategoria(e.target.value); setPagina(1) }}
+            value={filtroTipo}
+            onChange={(e) => { setFiltroTipo(e.target.value); setPagina(1) }}
             className="h-8 rounded-md border border-input bg-background px-2 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           >
-            <option value="todas">Todas las categorías</option>
-            {categorias.map((cat) => (
-              <option key={cat.id} value={cat.id}>{cat.nombre}</option>
-            ))}
+            <option value="todos">Todos</option>
+            <option value="personas">Personas</option>
+            <option value="empresas">Empresas</option>
+            <option value="ambos">Ambos</option>
           </select>
           <select
             value={filtroFecha}
@@ -369,11 +464,21 @@ export function CursosPanel() {
                 </div>
               )}
               <div className="flex flex-col gap-1 min-w-0 flex-1">
-                {curso.categoria && (
-                  <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    {curso.categoria}
-                  </span>
-                )}
+                <div className="flex items-center gap-2 flex-wrap">
+                  {curso.tipo && (
+                    <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                      {TIPO_LABELS[curso.tipo]}
+                    </span>
+                  )}
+                  {curso.categoria && (
+                    <>
+                      <span className="text-muted-foreground/40 text-xs">·</span>
+                      <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        {curso.categoria}
+                      </span>
+                    </>
+                  )}
+                </div>
                 <h3 className="text-base font-bold leading-tight">{curso.titulo}</h3>
                 <p className="text-xs text-muted-foreground">{curso.created_at}</p>
                 {curso.descripcion && (
@@ -389,9 +494,7 @@ export function CursosPanel() {
                     <Pencil className="size-3" /> Editar
                   </button>
                   <AlertDialog.Root>
-                    <AlertDialog.Trigger
-                      className="flex items-center gap-1 rounded-md bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600"
-                    >
+                    <AlertDialog.Trigger className="flex items-center gap-1 rounded-md bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600">
                       <Trash2 className="size-3" /> Eliminar
                     </AlertDialog.Trigger>
                     <AlertDialog.Portal>
