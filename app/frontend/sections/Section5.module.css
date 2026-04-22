@@ -149,6 +149,29 @@
   margin-top: 3rem;
   border-top: 1px solid rgba(17, 17, 17, 0.12);
   padding-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.legalLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+}
+
+.legalLink {
+  color: rgba(17, 17, 17, 0.72);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.legalLink:hover {
+  color: #e05780;
 }
 
 .copyright {
@@ -184,5 +207,9 @@
 
   .bodyText {
     max-width: none;
+  }
+
+  .bottomBar {
+    align-items: flex-start;
   }
 }

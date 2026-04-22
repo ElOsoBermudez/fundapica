@@ -25,7 +25,8 @@ import { cn } from "@/lib/utils"
 const navigationItems = [
   { href: "/frontend", label: "Inicio" },
   { href: "/frontend/cursos", label: "Cursos" },
-  { href: "/news", label: "News" },
+  { href: "/frontend/news", label: "Noticias" },
+  { href: "/frontend/contacto", label: "Contacto" },
 ]
 
 export function SiteHeader() {

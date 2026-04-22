@@ -20,7 +20,7 @@ export function CoursesHeroSelector() {
         <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#75A5E3]">
           Oferta formativa
         </p>
-        <h1 className="mt-4 font-sans text-6xl font-extrabold tracking-[-0.055em] text-[#E05780] sm:text-7xl lg:text-[90px]">
+        <h1 className="mt-4 font-sans text-5xl font-extrabold tracking-[-0.055em] text-[#E05780] sm:text-6xl lg:text-7xl">
           Cursos
         </h1>
         <p className="mt-5 font-[family:var(--font-body)] text-[18px] leading-7 text-black/65 sm:text-[20px]">
