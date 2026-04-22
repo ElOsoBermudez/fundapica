@@ -1,41 +1,26 @@
 "use client"
 
 import { useMemo, useState } from "react"
-
-import { newsCategories } from "../data"
-import { NewsCategory, NewsItem } from "../types"
+import type { NewsItem } from "../types"
 import { NewsCard } from "./NewsCard"
 import { NewsCategories } from "./NewsCategories"
 
 type NewsListProps = {
   items: NewsItem[]
+  categories: string[]
 }
 
-export function NewsList({ items }: NewsListProps) {
-  const [selectedCategory, setSelectedCategory] = useState<NewsCategory>("All")
+export function NewsList({ items, categories }: NewsListProps) {
+  const [selectedCategory, setSelectedCategory] = useState("Todas")
 
-  const sortedItems = useMemo(
-    () =>
-      [...items].sort(
-        (firstItem, secondItem) =>
-          new Date(secondItem.publishedAt).getTime() - new Date(firstItem.publishedAt).getTime()
-      ),
-    [items]
-  )
-
-  const featuredNews = useMemo(
-    () => sortedItems.find((item) => item.featured) ?? sortedItems[0],
-    [sortedItems]
-  )
+  const featuredNews = useMemo(() => items[0] ?? null, [items])
 
   const filteredItems = useMemo(() => {
-    const filteredByCategory =
-      selectedCategory === "All"
-        ? sortedItems
-        : sortedItems.filter((item) => item.category === selectedCategory)
-
-    return filteredByCategory.filter((item) => item.id !== featuredNews?.id)
-  }, [featuredNews?.id, selectedCategory, sortedItems])
+    const rest = items.slice(1)
+    return selectedCategory === "Todas"
+      ? rest
+      : rest.filter((item) => item.category === selectedCategory)
+  }, [items, selectedCategory])
 
   return (
     <div className="space-y-16">
@@ -66,7 +51,7 @@ export function NewsList({ items }: NewsListProps) {
             </h2>
           </div>
           <NewsCategories
-            categories={newsCategories}
+            categories={categories}
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}
           />

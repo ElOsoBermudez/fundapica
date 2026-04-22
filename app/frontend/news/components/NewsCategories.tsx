@@ -1,23 +1,16 @@
 "use client"
 
-import { NewsCategory } from "../types"
-
 type NewsCategoriesProps = {
-  categories: NewsCategory[]
-  selectedCategory: NewsCategory
-  onSelectCategory: (category: NewsCategory) => void
+  categories: string[]
+  selectedCategory: string
+  onSelectCategory: (category: string) => void
 }
 
-export function NewsCategories({
-  categories,
-  selectedCategory,
-  onSelectCategory,
-}: NewsCategoriesProps) {
+export function NewsCategories({ categories, selectedCategory, onSelectCategory }: NewsCategoriesProps) {
   return (
     <div className="flex flex-wrap gap-3">
       {categories.map((category) => {
         const isSelected = category === selectedCategory
-
         return (
           <button
             key={category}

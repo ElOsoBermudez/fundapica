@@ -3,6 +3,7 @@
 import FileUploadList4 from "@/components/file-upload-list-4"
 import { createBrowserSupabaseClient } from "@/lib/supabase/client"
 import type { Categoria } from "@/lib/supabase/types"
+import { AlertDialog } from "@base-ui/react/alert-dialog"
 import { motion } from "motion/react"
 import { PlusCircle, Pencil, Trash2 } from "lucide-react"
 import dynamic from "next/dynamic"
@@ -369,12 +370,35 @@ export function NoticiasPanel() {
                   >
                     <Pencil className="size-3" /> Editar
                   </button>
-                  <button
-                    onClick={() => handleEliminar(noticia.id)}
-                    className="flex items-center gap-1 rounded-md bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600"
-                  >
-                    <Trash2 className="size-3" /> Eliminar
-                  </button>
+                  <AlertDialog.Root>
+                    <AlertDialog.Trigger
+                      className="flex items-center gap-1 rounded-md bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600"
+                    >
+                      <Trash2 className="size-3" /> Eliminar
+                    </AlertDialog.Trigger>
+                    <AlertDialog.Portal>
+                      <AlertDialog.Backdrop className="fixed inset-0 bg-black/40 z-50" />
+                      <AlertDialog.Popup className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6 shadow-lg">
+                        <AlertDialog.Title className="text-base font-semibold">
+                          ¿Eliminar noticia?
+                        </AlertDialog.Title>
+                        <AlertDialog.Description className="mt-2 text-sm text-muted-foreground">
+                          Esta acción no se puede deshacer. La noticia «{noticia.titulo}» se eliminará permanentemente.
+                        </AlertDialog.Description>
+                        <div className="mt-5 flex justify-end gap-2">
+                          <AlertDialog.Close className="h-9 rounded-md border border-input px-4 text-sm hover:bg-accent">
+                            Cancelar
+                          </AlertDialog.Close>
+                          <AlertDialog.Close
+                            onClick={() => handleEliminar(noticia.id)}
+                            className="h-9 rounded-md bg-red-500 px-4 text-sm text-white hover:bg-red-600"
+                          >
+                            Sí, eliminar
+                          </AlertDialog.Close>
+                        </div>
+                      </AlertDialog.Popup>
+                    </AlertDialog.Portal>
+                  </AlertDialog.Root>
                 </div>
               </div>
             </div>

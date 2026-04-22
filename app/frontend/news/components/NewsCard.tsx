@@ -2,8 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 import { Badge } from "@/components/ui/badge"
-
-import { NewsItem } from "../types"
+import type { NewsItem } from "../types"
 
 type NewsCardProps = {
   news: NewsItem
@@ -11,7 +10,7 @@ type NewsCardProps = {
 }
 
 function formatDate(date: string) {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("es-ES", {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -30,13 +29,19 @@ export function NewsCard({ news, featured = false }: NewsCardProps) {
         href={`/news/${news.id}`}
         className={featured ? "relative min-h-[320px] overflow-hidden lg:min-h-[420px]" : "relative block aspect-[16/10] overflow-hidden"}
       >
-        <Image
-          src={news.image}
-          alt={news.title}
-          fill
-          sizes={featured ? "(max-width: 1024px) 100vw, 60vw" : "(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"}
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+        {news.image ? (
+          <Image
+            src={news.image}
+            alt={news.title}
+            fill
+            sizes={featured ? "(max-width: 1024px) 100vw, 60vw" : "(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"}
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="h-full w-full bg-neutral-100 flex items-center justify-center">
+            <span className="text-sm text-muted-foreground">Sin imagen</span>
+          </div>
+        )}
       </Link>
 
       <div className={featured ? "flex flex-col justify-between p-6 sm:p-8" : "flex flex-1 flex-col p-5"}>
