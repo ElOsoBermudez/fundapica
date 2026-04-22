@@ -1,6 +1,6 @@
 "use client";
 
-import { Upload, X, Download, Eye } from "lucide-react";
+import { Upload, X, Download, Eye, Search } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -17,8 +17,13 @@ import {
 
 export const title = "File List with Actions";
 
-const Example = () => {
+const Example = ({ onValueChange }: { onValueChange?: (files: File[]) => void }) => {
   const [files, setFiles] = React.useState<File[]>([]);
+
+  const handleFilesChange = (newFiles: File[]) => {
+    setFiles(newFiles);
+    onValueChange?.(newFiles);
+  };
 
   const handleDownload = (file: File) => {
     const url = URL.createObjectURL(file);
@@ -36,25 +41,25 @@ const Example = () => {
 
   return (
     <FileUpload
-      maxFiles={5}
-      maxSize={10 * 1024 * 1024}
+      maxFiles={1}
+      maxSize={5 * 1024 * 1024}
+      accept="image/jpg,image/jpeg,image/png,image/webp"
       className="w-full"
       value={files}
-      onValueChange={setFiles}
-      multiple
+      onValueChange={handleFilesChange}
     >
-      <FileUploadDropzone>
+      <FileUploadDropzone className="bg-neutral-100">
         <div className="flex flex-col items-center gap-1 text-center">
-          <div className="flex items-center justify-center rounded-full border p-2.5">
-            <Upload className="size-6 text-muted-foreground" />
+          <div className="flex items-center justify-center rounded-full border border-[#0a0a0a] bg-[#0a0a0a] p-2.5">
+            <Upload className="size-6 text-[#fafafa]" />
           </div>
-          <p className="text-sm font-medium">Upload files</p>
+          <p className="text-sm font-medium">Sube tu imagen</p>
           <p className="text-xs text-muted-foreground">
-            With download and preview actions
+            JPG, PNG, WebP · Máx. 5 MB
           </p>
         </div>
         <FileUploadTrigger asChild>
-          <Button variant="outline" size="sm" className="mt-2">Browse files</Button>
+          <Button size="sm" className="mt-2 bg-black text-white hover:bg-black/80"><Search className="mr-1 size-4" />Buscar imagenes</Button>
         </FileUploadTrigger>
       </FileUploadDropzone>
       <FileUploadList>

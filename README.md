@@ -23,3 +23,9 @@ import { Button } from "@/components/ui/button";
 ##BACKOFFICE
 javier.ferrer@ifp.es
 cjb7Hj2EVY9
+
+Backoffice
+dashboard
+noticias
+cursos
+fotos y videos
