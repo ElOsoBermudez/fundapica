@@ -11,6 +11,7 @@ import {
 import { contentModules } from "@/components/backoffice/dashboard/data"
 import { ResumenPanel } from "@/components/backoffice/dashboard/sections/resumen-panel"
 import { NoticiasPanel } from "@/components/backoffice/dashboard/sections/noticias-panel"
+import { CursosPanel } from "@/components/backoffice/dashboard/sections/cursos-panel"
 import { ContentPanel } from "@/components/backoffice/dashboard/sections/content-panel"
 import { MediaPanel } from "@/components/backoffice/dashboard/sections/media-panel"
 import { ConfiguracionPanel } from "@/components/backoffice/dashboard/sections/configuracion-panel"
@@ -121,7 +122,7 @@ export function DashboardOverview({ role }: { role: AppRole | null | undefined }
   const viewContent = {
     dashboard: <ResumenPanel statCards={statCards} isAdmin={isAdmin} />,
     noticias: <NoticiasPanel />,
-    cursos: <div />,
+    cursos: <CursosPanel />,
     content: (
       <ContentPanel
         modules={contentModules}

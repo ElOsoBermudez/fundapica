@@ -23,6 +23,22 @@ export type Noticia = {
   created_at: string;
 };
 
+export type CategoriaCurso = {
+  id: string;
+  nombre: string;
+  created_at: string;
+};
+
+export type Curso = {
+  id: string;
+  titulo: string;
+  descripcion: string | null;
+  contenido: string | null;
+  categoria_id: string | null;
+  imagen_url: string | null;
+  created_at: string;
+};
+
 export type Database = {
   public: {
     Tables: {
