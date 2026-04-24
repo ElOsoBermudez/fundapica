@@ -200,7 +200,10 @@ function SidebarContent({
   const rolePresentation = getRolePresentation(role)
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-y-auto">
+    <div
+      data-lenis-prevent
+      className="flex h-full min-h-0 flex-col overflow-y-auto"
+    >
       <div className="border-b border-border/70 px-5 py-5">
         <div className="rounded-[24px] bg-[linear-gradient(135deg,#101828,#1d2939_52%,#E05780_160%)] p-5 text-white">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
