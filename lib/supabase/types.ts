@@ -8,9 +8,58 @@ export type Profile = {
   updated_at: string;
 };
 
+export type Categoria = {
+  id: string;
+  nombre: string;
+  created_at: string;
+};
+
+export type Noticia = {
+  id: string;
+  titulo: string;
+  contenido: string | null;
+  categoria_id: string | null;
+  imagen_url: string | null;
+  created_at: string;
+};
+
+export type TipoCurso = "personas" | "empresas" | "ambos";
+
+export type Curso = {
+  id: string;
+  titulo: string;
+  descripcion: string | null;
+  contenido: string | null;
+  tipo: TipoCurso | null;
+  imagen_url: string | null;
+  created_at: string;
+};
+
 export type Database = {
   public: {
     Tables: {
+      categorias: {
+        Row: Categoria;
+        Insert: { nombre: string };
+        Update: { nombre?: string };
+        Relationships: [];
+      };
+      noticias: {
+        Row: Noticia;
+        Insert: {
+          titulo: string;
+          contenido?: string | null;
+          categoria_id?: string | null;
+          imagen_url?: string | null;
+        };
+        Update: {
+          titulo?: string;
+          contenido?: string | null;
+          categoria_id?: string | null;
+          imagen_url?: string | null;
+        };
+        Relationships: [];
+      };
       profiles: {
         Row: Profile;
         Insert: {

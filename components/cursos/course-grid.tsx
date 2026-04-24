@@ -26,14 +26,20 @@ export function CourseGrid({ type, eyebrow, category }: CourseGridProps) {
         <div className="flex flex-wrap gap-3">
           <Link
             href={`/frontend/cursos/${type}`}
-            className={cn(buttonVariants({ variant: "ghost" }), "rounded-xl px-3 text-sm")}
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "rounded-xl px-3 text-sm text-[#75A5E3] hover:text-[#E05780]"
+            )}
           >
             <ChevronLeft className="size-4" />
             Volver a {eyebrow.toLowerCase()}
           </Link>
           <Link
             href="/frontend/cursos"
-            className={cn(buttonVariants({ variant: "ghost" }), "rounded-xl px-3 text-sm")}
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "rounded-xl px-3 text-sm text-[#75A5E3] hover:text-[#E05780]"
+            )}
           >
             <ChevronLeft className="size-4" />
             Inicio de cursos
@@ -41,11 +47,13 @@ export function CourseGrid({ type, eyebrow, category }: CourseGridProps) {
         </div>
 
         <div className="mx-auto mt-8 max-w-3xl text-center">
-          <p className="text-sm font-medium uppercase tracking-[0.28em] text-primary">{eyebrow}</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#75A5E3]">
+            {eyebrow}
+          </p>
+          <h1 className="mt-4 font-sans text-6xl font-extrabold tracking-[-0.055em] text-[#E05780] sm:text-7xl lg:text-[90px]">
             {category.title}
           </h1>
-          <p className="mt-4 text-base leading-7 text-muted-foreground sm:text-lg">
+          <p className="mt-5 font-[family:var(--font-body)] text-[18px] leading-7 text-black/65 sm:text-[20px]">
             {category.description}
           </p>
         </div>
@@ -61,27 +69,30 @@ export function CourseGrid({ type, eyebrow, category }: CourseGridProps) {
             return (
               <Card
                 key={course.title}
-                className="h-full rounded-3xl border border-border/70 bg-background pt-0 shadow-sm"
+                className="h-full rounded-[1.75rem] border border-black/8 bg-white pt-0 shadow-[0_10px_30px_rgba(17,17,17,0.06)]"
               >
-                <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                <div className="relative aspect-[16/10] overflow-hidden bg-[#F8FAFC]">
                   <img src={imageSrc} alt={imageAlt} className="h-full w-full object-cover" />
                 </div>
                 <CardHeader className="gap-2 px-5 pt-5">
                   <div className="mb-1">
-                    <Badge
-                      variant="secondary"
-                      className="rounded-full px-3 py-1 text-[11px] uppercase"
-                    >
+                    <Badge className="rounded-full border-0 bg-[#EAFCFC] px-3 py-1 text-[11px] uppercase text-[#75A5E3]">
                       {badge}
                     </Badge>
                   </div>
-                  <CardTitle className="text-xl font-semibold">{course.title}</CardTitle>
-                  <CardDescription className="text-sm leading-7 text-muted-foreground">
+                  <CardTitle className="font-sans text-2xl font-bold tracking-[-0.04em] text-[#E05780]">
+                    {course.title}
+                  </CardTitle>
+                  <CardDescription className="font-[family:var(--font-body)] text-sm leading-6 text-black/60">
                     {course.description}
                   </CardDescription>
                 </CardHeader>
-                <CardFooter className="mt-auto justify-start border-t border-border/60 bg-background px-5 py-4">
-                  <Button variant="outline" size="lg" className="rounded-xl">
+                <CardFooter className="mt-auto justify-start border-t border-black/8 bg-white px-5 py-4">
+                  <Button
+                    variant="default"
+                    size="lg"
+                    className="rounded-xl bg-[#75A5E3] text-white hover:bg-[#6796d2]"
+                  >
                     Ver curso
                     <ChevronRight className="size-4" />
                   </Button>

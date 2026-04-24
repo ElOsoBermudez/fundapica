@@ -101,6 +101,20 @@ export default function Section5() {
           <p className={styles.copyright}>
             {"\u00A9"} 2026 Fundapica. Todos los derechos reservados.
           </p>
+          <nav className={styles.legalLinks} aria-label="Enlaces legales">
+            <a
+              href="https://www.fundapica.org/aviso-legal-pol%C3%ADtica-de-privacidad-y-pol%C3%ADtica-de-cookies"
+              className={styles.legalLink}
+            >
+              Política de privacidad y aviso legal
+            </a>
+            <a
+              href="https://www.fundapica.org/pol%C3%ADtica-de-calidad"
+              className={styles.legalLink}
+            >
+              Política de calidad
+            </a>
+          </nav>
         </div>
       </div>
     </footer>

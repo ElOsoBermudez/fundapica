@@ -2,9 +2,11 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Menu } from "lucide-react"
 
 import { buttonVariants } from "@/components/ui/button"
+import { SignOutButton } from "@/components/sign-out-button"
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -23,10 +25,14 @@ import { cn } from "@/lib/utils"
 const navigationItems = [
   { href: "/frontend", label: "Inicio" },
   { href: "/frontend/cursos", label: "Cursos" },
-  { href: "/backend", label: "Backend" },
+  { href: "/frontend/news", label: "Noticias" },
+  { href: "/frontend/contacto", label: "Contacto" },
 ]
 
 export function SiteHeader() {
+  const pathname = usePathname()
+  const isBackofficePanel = pathname.startsWith("/backend/backoffice/panel")
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-18 w-full max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
@@ -64,17 +70,21 @@ export function SiteHeader() {
         </NavigationMenu>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Link
-            href="/backend/backoffice"
-            className={buttonVariants({
-              variant: "default",
-              size: "sm",
-              className:
-                "h-9 rounded-full bg-foreground px-4 text-background shadow-sm hover:bg-foreground/90",
-            })}
-          >
-            Backoffice
-          </Link>
+          {isBackofficePanel ? (
+            <SignOutButton />
+          ) : (
+            <Link
+              href="/backend/backoffice"
+              className={buttonVariants({
+                variant: "default",
+                size: "sm",
+                className:
+                  "h-9 rounded-full bg-foreground px-4 text-background shadow-sm hover:bg-foreground/90",
+              })}
+            >
+              Backoffice
+            </Link>
+          )}
         </div>
 
         {/* Mobile navigation moves the links into a Sheet to keep the header compact. */}
@@ -117,16 +127,20 @@ export function SiteHeader() {
 
             <Separator className="my-6" />
 
-            <Link
-              href="/backend/backoffice"
-              className={buttonVariants({
-                variant: "default",
-                size: "lg",
-                className: "w-full rounded-xl bg-foreground text-background hover:bg-foreground/90",
-              })}
-            >
-              Backoffice
-            </Link>
+            {isBackofficePanel ? (
+              <SignOutButton />
+            ) : (
+              <Link
+                href="/backend/backoffice"
+                className={buttonVariants({
+                  variant: "default",
+                  size: "lg",
+                  className: "w-full rounded-xl bg-foreground text-background hover:bg-foreground/90",
+                })}
+              >
+                Backoffice
+              </Link>
+            )}
           </SheetContent>
         </Sheet>
       </div>

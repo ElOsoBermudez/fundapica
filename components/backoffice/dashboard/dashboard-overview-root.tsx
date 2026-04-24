@@ -10,6 +10,8 @@ import {
 
 import { contentModules } from "@/components/backoffice/dashboard/data"
 import { ResumenPanel } from "@/components/backoffice/dashboard/sections/resumen-panel"
+import { NoticiasPanel } from "@/components/backoffice/dashboard/sections/noticias-panel"
+import { CursosPanel } from "@/components/backoffice/dashboard/sections/cursos-panel"
 import { ContentPanel } from "@/components/backoffice/dashboard/sections/content-panel"
 import { MediaPanel } from "@/components/backoffice/dashboard/sections/media-panel"
 import { ConfiguracionPanel } from "@/components/backoffice/dashboard/sections/configuracion-panel"
@@ -21,6 +23,9 @@ import type {
 import type { AppRole } from "@/lib/supabase/types"
 
 function getCurrentView(rawView: string | null, isAdmin: boolean): DashboardMainView {
+  if (rawView === "noticias") return "noticias"
+  if (rawView === "cursos") return "cursos"
+
   if (rawView === "news" || rawView === "blog" || rawView === "courses") {
     return "content"
   }
@@ -116,6 +121,8 @@ export function DashboardOverview({ role }: { role: AppRole | null | undefined }
 
   const viewContent = {
     dashboard: <ResumenPanel statCards={statCards} isAdmin={isAdmin} />,
+    noticias: <NoticiasPanel />,
+    cursos: <CursosPanel />,
     content: (
       <ContentPanel
         modules={contentModules}

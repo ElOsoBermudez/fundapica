@@ -1,10 +1,12 @@
 import { Geist, Geist_Mono, Montserrat } from "next/font/google"
 
 import "./globals.css"
+import { SiteFooter } from "@/components/site-footer"
 import { LenisProvider } from "@/components/lenis-provider"
 import { SiteHeader } from "@/components/site-header"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner"
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -44,7 +46,18 @@ export default function RootLayout({
           <div className="flex min-h-svh flex-col">
             <SiteHeader />
             <main className="flex-1">{children}</main>
+            <SiteFooter />
           </div>
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              style: {
+                background: "#0a0a0a",
+                color: "#fafafa",
+                border: "none",
+              },
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>
