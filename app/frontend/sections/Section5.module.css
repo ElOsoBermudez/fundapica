@@ -1,6 +1,6 @@
 .footer {
   position: relative;
-  margin-top: 5.5rem;
+  margin-top: 7rem;
   background: #eafcfc;
   color: #111111;
   padding: 7rem 1.5rem 1.75rem;
@@ -8,10 +8,10 @@
 
 .wave {
   position: absolute;
-  top: -5.5rem;
+  top: -7rem;
   left: 0;
   width: 100%;
-  height: 5.5rem;
+  height: 7rem;
   background: #ffffff;
   overflow: hidden;
   line-height: 0;
@@ -184,13 +184,13 @@
 
 @media (max-width: 768px) {
   .footer {
-    margin-top: 4rem;
+    margin-top: 5rem;
     padding: 5.75rem 1.25rem 1.5rem;
   }
 
   .wave {
-    top: -4rem;
-    height: 4rem;
+    top: -5rem;
+    height: 5rem;
   }
 
   .columns {
