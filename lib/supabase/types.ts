@@ -24,6 +24,14 @@ export type Noticia = {
 };
 
 export type TipoCurso = "personas" | "empresas" | "ambos";
+export type TipoCategoriaCurso = "personas" | "empresas";
+
+export type CategoriaCurso = {
+  id: string;
+  nombre: string;
+  tipo: TipoCategoriaCurso;
+  created_at: string;
+};
 
 export type Curso = {
   id: string;
@@ -31,7 +39,9 @@ export type Curso = {
   descripcion: string | null;
   contenido: string | null;
   tipo: TipoCurso | null;
+  categoria_id: string | null;
   imagen_url: string | null;
+  pdf_url: string | null;
   created_at: string;
 };
 
@@ -59,6 +69,41 @@ export type Database = {
           imagen_url?: string | null;
         };
         Relationships: [];
+      };
+      categorias_cursos: {
+        Row: CategoriaCurso;
+        Insert: { nombre: string; tipo: TipoCategoriaCurso };
+        Update: { nombre?: string; tipo?: TipoCategoriaCurso };
+        Relationships: [];
+      };
+      cursos: {
+        Row: Curso;
+        Insert: {
+          titulo: string;
+          descripcion?: string | null;
+          contenido?: string | null;
+          tipo?: TipoCurso | null;
+          categoria_id?: string | null;
+          imagen_url?: string | null;
+          pdf_url?: string | null;
+        };
+        Update: {
+          titulo?: string;
+          descripcion?: string | null;
+          contenido?: string | null;
+          tipo?: TipoCurso | null;
+          categoria_id?: string | null;
+          imagen_url?: string | null;
+          pdf_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "cursos_categoria_id_fkey";
+            columns: ["categoria_id"];
+            referencedRelation: "categorias_cursos";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       profiles: {
         Row: Profile;

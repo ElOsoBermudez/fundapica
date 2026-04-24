@@ -48,6 +48,7 @@ export function NoticiasPanel() {
   const [noticias, setNoticias] = useState<NoticiaCard[]>([])
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editorKey, setEditorKey] = useState(0)
+  const [uploadKey, setUploadKey] = useState(0)
   const [filtroCategoria, setFiltroCategoria] = useState<string>("todas")
   const [filtroFecha, setFiltroFecha] = useState<string>("recientes")
   const [pagina, setPagina] = useState(1)
@@ -94,6 +95,7 @@ export function NoticiasPanel() {
     setImageUrl(null)
     setEditingId(null)
     setEditorKey((k) => k + 1)
+    setUploadKey((k) => k + 1)
   }
 
   const handleFilesChange = async (files: File[]) => {
@@ -232,7 +234,7 @@ export function NoticiasPanel() {
         <h2 className="mb-6 text-3xl font-extrabold tracking-[-0.03em] text-[#000000]">
           {editingId ? "Editar noticia" : "Crear nueva noticia/post"}
         </h2>
-        <FileUploadList4 onValueChange={handleFilesChange} />
+        <FileUploadList4 key={uploadKey} onValueChange={handleFilesChange} />
         <div className="mt-4 flex items-center gap-3">
           <span className="text-sm text-muted-foreground whitespace-nowrap">Elige una categoría</span>
           <div className="w-44">
