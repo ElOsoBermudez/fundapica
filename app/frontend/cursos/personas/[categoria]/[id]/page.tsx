@@ -7,6 +7,7 @@ import { createServerSupabaseClient } from "@/lib/supabase/server"
 import { slugify } from "@/components/cursos/data"
 import { Badge } from "@/components/ui/badge"
 import { PdfViewer } from "@/components/cursos/pdf-viewer"
+import { CursoDetailContent } from "@/components/cursos/curso-detail-content"
 
 type Props = {
   params: Promise<{ categoria: string; id: string }>
@@ -63,25 +64,15 @@ export default async function PersonasCursoDetailPage({ params }: Props) {
             </div>
 
             <div className="mt-5 max-w-3xl space-y-4">
-              <h1 className="font-sans text-4xl font-extrabold tracking-[-0.05em] text-[#E05780] sm:text-6xl">
-                {curso.titulo}
-              </h1>
-              {curso.descripcion && (
-                <p className="font-[family:var(--font-body)] text-lg text-black/65">
-                  {curso.descripcion}
-                </p>
-              )}
-              <div className="py-5">
-                <div className="h-[0.5px] bg-[#E05780]" />
-              </div>
-            </div>
-
-            {curso.contenido && (
-              <div
-                className="mt-8 prose prose-lg max-w-none font-[family:var(--font-body)] text-[17px] leading-[1.3em] text-black/75"
-                dangerouslySetInnerHTML={{ __html: curso.contenido }}
+              <CursoDetailContent
+                titulo={curso.titulo}
+                titulo_ca={curso.titulo_ca ?? null}
+                descripcion={curso.descripcion ?? null}
+                descripcion_ca={curso.descripcion_ca ?? null}
+                contenido={curso.contenido ?? null}
+                contenido_ca={curso.contenido_ca ?? null}
               />
-            )}
+            </div>
 
             {curso.pdf_url && (
               <div className="mt-8">

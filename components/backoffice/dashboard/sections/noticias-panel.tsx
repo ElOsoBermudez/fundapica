@@ -159,6 +159,33 @@ export function NoticiasPanel() {
     }
   }
 
+  const autoTranslate = async (id: string, tituloOrig: string, contenidoOrig: string | null) => {
+    try {
+      const res = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fields: { titulo: tituloOrig, contenido: contenidoOrig },
+          targetLang: "ca",
+        }),
+      })
+      const { translated } = await res.json()
+      if (!translated) return
+      const supabase = createBrowserSupabaseClient()
+      const { error: updateError } = await supabase
+        .from("noticias")
+        .update({
+          titulo_ca: translated.titulo ?? null,
+          contenido_ca: translated.contenido ?? null,
+        })
+        .eq("id", id)
+      if (updateError) throw updateError
+      toast.success("Traducción al catalán generada automáticamente")
+    } catch {
+      toast.error("No se pudo generar la traducción al catalán")
+    }
+  }
+
   const handleGuardar = async () => {
     if (!titulo.trim()) return
     setSaving(true)
@@ -186,7 +213,9 @@ export function NoticiasPanel() {
             imagen_url: imageUrl,
           } : n
         ))
+        const savedId = editingId
         resetForm()
+        autoTranslate(savedId, titulo.trim(), contenido || null)
       } else {
         toast.error("Error al actualizar la noticia")
       }
@@ -215,6 +244,7 @@ export function NoticiasPanel() {
         }
         setNoticias((prev) => [nueva, ...prev.map(n => ({ ...n, isNew: false }))])
         resetForm()
+        autoTranslate(data.id, titulo.trim(), contenido || null)
       } else {
         toast.error("Error al guardar la noticia, inténtalo de nuevo")
       }

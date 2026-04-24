@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 
 import { Badge } from "@/components/ui/badge"
 import { createServerSupabaseClient } from "@/lib/supabase/server"
+import { NewsDetailContent } from "../components/NewsDetailContent"
 
 type NewsDetailPageProps = {
   params: Promise<{ id: string }>
@@ -29,11 +30,11 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
 
   if (!article) notFound()
 
-  const category = (article.categorias as { nombre: string } | null)?.nombre ?? "General"
+  const category = (article.categorias as unknown as { nombre: string } | null)?.nombre ?? "General"
 
   const { data: related } = await supabase
     .from("noticias")
-    .select("id, titulo, categorias(nombre)")
+    .select("id, titulo, titulo_ca, categorias(nombre)")
     .neq("id", id)
     .order("created_at", { ascending: false })
     .limit(3)
@@ -74,21 +75,17 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
             </div>
 
             <div className="mt-5 max-w-3xl space-y-4">
-              <h1 className="font-sans text-4xl font-extrabold tracking-[-0.05em] text-[#E05780] sm:text-6xl">
-                {article.titulo}
-              </h1>
-              <div className="py-5">
-                <div className="h-[0.5px] bg-[#E05780]" />
-              </div>
+              <NewsDetailContent
+                titulo={article.titulo}
+                titulo_ca={article.titulo_ca ?? null}
+                contenido={article.contenido ?? null}
+                contenido_ca={article.contenido_ca ?? null}
+              />
             </div>
 
-            <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
-              <div
-                className="prose prose-lg max-w-none font-[family:var(--font-body)] text-[17px] leading-[1.3em] text-black/75"
-                dangerouslySetInnerHTML={{ __html: article.contenido ?? "" }}
-              />
-
-              {related && related.length > 0 && (
+            {related && related.length > 0 && (
+              <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
+                <div />
                 <aside className="rounded-[1.5rem] border border-black/8 bg-[#F8FAFC] p-5">
                   <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#75A5E3]">
                     Relacionadas
@@ -101,7 +98,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
                         className="block rounded-2xl border border-black/8 bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
                       >
                         <p className="font-[family:var(--font-body)] text-xs font-medium uppercase tracking-[0.2em] text-black/45">
-                          {(item.categorias as { nombre: string } | null)?.nombre ?? "General"}
+                          {(item.categorias as unknown as { nombre: string } | null)?.nombre ?? "General"}
                         </p>
                         <h2 className="mt-2 font-sans text-base font-bold leading-snug text-[#E05780]">
                           {item.titulo}
@@ -110,8 +107,8 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
                     ))}
                   </div>
                 </aside>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </article>
       </div>

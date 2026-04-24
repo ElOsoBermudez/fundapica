@@ -29,6 +29,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
+import { useLanguage, type Language } from "@/lib/i18n/language-context"
 
 const navigationItems = [
   { href: "/frontend", label: "Inicio" },
@@ -51,8 +52,8 @@ function isActivePath(pathname: string, href: string) {
 }
 
 type LanguageSwitcherProps = {
-  value: string
-  onValueChange: (value: string) => void
+  value: Language
+  onValueChange: (value: Language) => void
   className?: string
 }
 
@@ -66,7 +67,7 @@ function LanguageSwitcher({
       <label htmlFor="site-language" className="sr-only">
         Seleccionar idioma
       </label>
-      <Select value={value} onValueChange={(nextValue) => nextValue && onValueChange(nextValue)}>
+      <Select value={value} onValueChange={(nextValue) => nextValue && onValueChange(nextValue as Language)}>
         <SelectTrigger
           id="site-language"
           aria-label="Seleccionar idioma"
@@ -157,7 +158,7 @@ function NavLinks({ pathname, mobile = false, onNavigate }: NavLinksProps) {
 export function SiteHeader() {
   const pathname = usePathname()
   const isBackofficePanel = pathname.startsWith("/backend/backoffice/panel")
-  const [language, setLanguage] = useState("es")
+  const { language, setLanguage } = useLanguage()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (

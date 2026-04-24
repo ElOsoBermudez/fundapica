@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { LenisProvider } from "@/components/lenis-provider"
 import { SiteHeader } from "@/components/site-header"
 import { ThemeProvider } from "@/components/theme-provider"
+import { LanguageProvider } from "@/lib/i18n/language-context"
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner"
 
@@ -42,6 +43,7 @@ export default function RootLayout({
     >
       <body>
         <LenisProvider />
+        <LanguageProvider>
         <ThemeProvider>
           <div className="flex min-h-svh flex-col">
             <SiteHeader />
@@ -59,6 +61,7 @@ export default function RootLayout({
             }}
           />
         </ThemeProvider>
+        </LanguageProvider>
       </body>
     </html>
   )

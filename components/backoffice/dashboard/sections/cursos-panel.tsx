@@ -234,6 +234,34 @@ export function CursosPanel() {
     }
   }
 
+  const autoTranslate = async (id: string, tituloOrig: string, descripcionOrig: string | null, contenidoOrig: string | null) => {
+    try {
+      const res = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fields: { titulo: tituloOrig, descripcion: descripcionOrig, contenido: contenidoOrig },
+          targetLang: "ca",
+        }),
+      })
+      const { translated } = await res.json()
+      if (!translated) return
+      const supabase = createBrowserSupabaseClient()
+      const { error: updateError } = await supabase
+        .from("cursos")
+        .update({
+          titulo_ca: translated.titulo ?? null,
+          descripcion_ca: translated.descripcion ?? null,
+          contenido_ca: translated.contenido ?? null,
+        })
+        .eq("id", id)
+      if (updateError) throw updateError
+      toast.success("Traducción al catalán generada automáticamente")
+    } catch {
+      toast.error("No se pudo generar la traducción al catalán")
+    }
+  }
+
   const handleGuardar = async () => {
     if (!titulo.trim()) return
     setSaving(true)
@@ -267,7 +295,9 @@ export function CursosPanel() {
             pdf_url: pdfUrl,
           } : c
         ))
+        const savedId = editingId
         resetForm()
+        autoTranslate(savedId, titulo.trim(), descripcion.trim() || null, contenido || null)
       } else {
         toast.error("Error al actualizar el curso")
       }
@@ -302,6 +332,7 @@ export function CursosPanel() {
         }
         setCursos((prev) => [nuevo, ...prev.map(c => ({ ...c, isNew: false }))])
         resetForm()
+        autoTranslate(data.id, titulo.trim(), descripcion.trim() || null, contenido || null)
       } else {
         toast.error("Error al guardar el curso, inténtalo de nuevo")
       }

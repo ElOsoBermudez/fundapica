@@ -18,6 +18,8 @@ export type Noticia = {
   id: string;
   titulo: string;
   contenido: string | null;
+  titulo_ca: string | null;
+  contenido_ca: string | null;
   categoria_id: string | null;
   imagen_url: string | null;
   created_at: string;
@@ -38,6 +40,9 @@ export type Curso = {
   titulo: string;
   descripcion: string | null;
   contenido: string | null;
+  titulo_ca: string | null;
+  descripcion_ca: string | null;
+  contenido_ca: string | null;
   tipo: TipoCurso | null;
   categoria_id: string | null;
   imagen_url: string | null;
@@ -59,12 +64,16 @@ export type Database = {
         Insert: {
           titulo: string;
           contenido?: string | null;
+          titulo_ca?: string | null;
+          contenido_ca?: string | null;
           categoria_id?: string | null;
           imagen_url?: string | null;
         };
         Update: {
           titulo?: string;
           contenido?: string | null;
+          titulo_ca?: string | null;
+          contenido_ca?: string | null;
           categoria_id?: string | null;
           imagen_url?: string | null;
         };
@@ -82,6 +91,9 @@ export type Database = {
           titulo: string;
           descripcion?: string | null;
           contenido?: string | null;
+          titulo_ca?: string | null;
+          descripcion_ca?: string | null;
+          contenido_ca?: string | null;
           tipo?: TipoCurso | null;
           categoria_id?: string | null;
           imagen_url?: string | null;
@@ -91,6 +103,9 @@ export type Database = {
           titulo?: string;
           descripcion?: string | null;
           contenido?: string | null;
+          titulo_ca?: string | null;
+          descripcion_ca?: string | null;
+          contenido_ca?: string | null;
           tipo?: TipoCurso | null;
           categoria_id?: string | null;
           imagen_url?: string | null;

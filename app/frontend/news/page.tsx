@@ -17,9 +17,12 @@ export default async function NewsPage() {
   const items: NewsItem[] = (data ?? []).map((n, index) => ({
     id: n.id,
     title: n.titulo,
+    title_ca: n.titulo_ca ?? null,
     description: n.contenido ? stripHtml(n.contenido).slice(0, 220) : "",
+    description_ca: n.contenido_ca ? stripHtml(n.contenido_ca).slice(0, 220) : null,
     content: n.contenido ?? "",
-    category: (n.categorias as { nombre: string } | null)?.nombre ?? "General",
+    content_ca: n.contenido_ca ?? null,
+    category: (n.categorias as unknown as { nombre: string } | null)?.nombre ?? "General",
     image: n.imagen_url ?? null,
     publishedAt: n.created_at,
     author: "Fundapica",
