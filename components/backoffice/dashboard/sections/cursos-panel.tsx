@@ -4,7 +4,7 @@ import FileUploadList4 from "@/components/file-upload-list-4"
 import { createBrowserSupabaseClient } from "@/lib/supabase/client"
 import { AlertDialog } from "@base-ui/react/alert-dialog"
 import { motion } from "motion/react"
-import { PlusCircle, Pencil, Trash2 } from "lucide-react"
+import { PlusCircle, Pencil, Trash2, FileText, X } from "lucide-react"
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
@@ -48,6 +48,7 @@ type CursoCard = {
   categoria: string | null
   categoria_id: string | null
   imagen_url: string | null
+  pdf_url: string | null
   created_at: string
   isNew: boolean
 }
@@ -63,11 +64,15 @@ export function CursosPanel() {
   const [descripcion, setDescripcion] = useState("")
   const [contenido, setContenido] = useState("")
   const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [uploadingPdf, setUploadingPdf] = useState(false)
   const [saving, setSaving] = useState(false)
   const [cursos, setCursos] = useState<CursoCard[]>([])
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editorKey, setEditorKey] = useState(0)
+  const [uploadKey, setUploadKey] = useState(0)
+  const [pdfKey, setPdfKey] = useState(0)
   const [filtroTipo, setFiltroTipo] = useState<string>("todos")
   const [filtroFecha, setFiltroFecha] = useState<string>("recientes")
   const [pagina, setPagina] = useState(1)
@@ -100,6 +105,7 @@ export function CursosPanel() {
             categoria: (c.categorias_cursos as unknown as { nombre: string } | null)?.nombre ?? null,
             categoria_id: c.categoria_id,
             imagen_url: c.imagen_url,
+            pdf_url: c.pdf_url,
             created_at: new Date(c.created_at).toLocaleDateString("es-ES", {
               day: "numeric", month: "long", year: "numeric",
             }),
@@ -117,7 +123,7 @@ export function CursosPanel() {
       : categorias.filter((c) => c.tipo === tipo)
 
   // Al cambiar tipo, resetear categoría si ya no aplica
-  const handleTipoChange = (v: string) => {
+  const handleTipoChange = (v: string | null) => {
     const nuevo = (v as TipoCurso) || null
     setTipo(nuevo)
     if (nuevo !== "ambos" && nuevo !== null) {
@@ -135,8 +141,11 @@ export function CursosPanel() {
     setTipo(null)
     setCategoriaId(null)
     setImageUrl(null)
+    setPdfUrl(null)
     setEditingId(null)
     setEditorKey((k) => k + 1)
+    setUploadKey((k) => k + 1)
+    setPdfKey((k) => k + 1)
   }
 
   const handleFilesChange = async (files: File[]) => {
@@ -178,6 +187,27 @@ export function CursosPanel() {
     }
   }
 
+  const handlePdfChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || file.type !== "application/pdf") return
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("El PDF no puede superar 10 MB")
+      return
+    }
+    setUploadingPdf(true)
+    const supabase = createBrowserSupabaseClient()
+    const path = `${Date.now()}.pdf`
+    const { error } = await supabase.storage.from("cursos-pdfs").upload(path, file, { upsert: true })
+    if (!error) {
+      const { data } = supabase.storage.from("cursos-pdfs").getPublicUrl(path)
+      setPdfUrl(data.publicUrl)
+      toast.success("PDF subido correctamente")
+    } else {
+      toast.error(`Error al subir el PDF: ${error.message}`)
+    }
+    setUploadingPdf(false)
+  }
+
   const handleEditar = (curso: CursoCard) => {
     setEditingId(curso.id)
     setTitulo(curso.titulo)
@@ -186,6 +216,7 @@ export function CursosPanel() {
     setTipo(curso.tipo)
     setCategoriaId(curso.categoria_id)
     setImageUrl(curso.imagen_url)
+    setPdfUrl(curso.pdf_url)
     setEditorKey((k) => k + 1)
     window.scrollTo({ top: 0, behavior: "smooth" })
     toast("Editando curso — modifica los campos y pulsa Actualizar")
@@ -218,6 +249,7 @@ export function CursosPanel() {
           tipo: tipo ?? null,
           categoria_id: categoriaId ?? null,
           imagen_url: imageUrl || null,
+          pdf_url: pdfUrl || null,
         })
         .eq("id", editingId)
       if (!error) {
@@ -232,6 +264,7 @@ export function CursosPanel() {
             categoria: categorias.find(cat => cat.id === categoriaId)?.nombre ?? null,
             categoria_id: categoriaId,
             imagen_url: imageUrl,
+            pdf_url: pdfUrl,
           } : c
         ))
         resetForm()
@@ -248,6 +281,7 @@ export function CursosPanel() {
           tipo: tipo ?? null,
           categoria_id: categoriaId ?? null,
           imagen_url: imageUrl || null,
+          pdf_url: pdfUrl || null,
         })
         .select()
         .single()
@@ -262,6 +296,7 @@ export function CursosPanel() {
           categoria: categorias.find(cat => cat.id === categoriaId)?.nombre ?? null,
           categoria_id: categoriaId,
           imagen_url: imageUrl,
+          pdf_url: pdfUrl,
           created_at: new Date().toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }),
           isNew: true,
         }
@@ -286,7 +321,7 @@ export function CursosPanel() {
         <h2 className="mb-6 text-3xl font-extrabold tracking-[-0.03em] text-[#000000]">
           {editingId ? "Editar curso" : "Crear nuevo curso"}
         </h2>
-        <FileUploadList4 onValueChange={handleFilesChange} />
+        <FileUploadList4 key={uploadKey} onValueChange={handleFilesChange} />
 
         {/* Fila 1: tipo de audiencia */}
         <div className="mt-4 flex items-center gap-3 flex-wrap">
@@ -394,10 +429,43 @@ export function CursosPanel() {
         <div className="mt-4">
           <RichTextEditor key={editorKey} onChange={setContenido} defaultContent={contenido} />
         </div>
+        <div className="mt-4">
+          <p className="mb-1 text-sm font-medium">Adjunto PDF (opcional)</p>
+          <div className="flex items-center gap-3 flex-wrap">
+            <label className={`flex items-center gap-2 h-9 rounded-md px-3 py-1 text-sm cursor-pointer ${uploadingPdf ? "bg-black/50 text-[#fafafa]" : "bg-black text-[#fafafa] hover:bg-black/80"}`}>
+              <FileText className="size-4" />
+              {uploadingPdf ? "Subiendo..." : "Subir PDF"}
+              <input
+                key={pdfKey}
+                type="file"
+                accept="application/pdf"
+                className="hidden"
+                onChange={handlePdfChange}
+                disabled={uploadingPdf}
+              />
+            </label>
+            {pdfUrl && (
+              <div className="flex items-center gap-2 rounded-md border border-input bg-background px-3 py-1.5 text-sm">
+                <FileText className="size-4 text-green-600 shrink-0" />
+                <span className="truncate max-w-[180px] text-muted-foreground">
+                  {pdfUrl.split("/").pop()}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => { setPdfUrl(null); setPdfKey((k) => k + 1) }}
+                  className="text-muted-foreground hover:text-red-500 shrink-0"
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="mt-6 flex items-center gap-3">
           <button
             onClick={handleGuardar}
-            disabled={saving || uploading || !titulo.trim()}
+            disabled={saving || uploading || uploadingPdf || !titulo.trim()}
             className="h-10 rounded-md bg-black px-6 text-sm font-medium text-white hover:bg-black/80 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? "Guardando..." : editingId ? "Actualizar curso" : "Guardar y publicar"}

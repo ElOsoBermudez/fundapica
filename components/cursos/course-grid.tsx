@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import type { CourseCategory, CourseType } from "@/components/cursos/data"
 import { Badge } from "@/components/ui/badge"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import {
   Card,
   CardDescription,
@@ -88,14 +88,16 @@ export function CourseGrid({ type, eyebrow, category }: CourseGridProps) {
                   </CardDescription>
                 </CardHeader>
                 <CardFooter className="mt-auto justify-start border-t border-black/8 bg-white px-5 py-4">
-                  <Button
-                    variant="default"
-                    size="lg"
-                    className="rounded-xl bg-[#75A5E3] text-white hover:bg-[#6796d2]"
+                  <Link
+                    href={`/frontend/cursos/${type}/${category.slug}/${course.id}`}
+                    className={cn(
+                      buttonVariants({ size: "lg" }),
+                      "rounded-xl bg-[#75A5E3] text-white hover:bg-[#6796d2]"
+                    )}
                   >
                     Ver curso
                     <ChevronRight className="size-4" />
-                  </Button>
+                  </Link>
                 </CardFooter>
               </Card>
             )

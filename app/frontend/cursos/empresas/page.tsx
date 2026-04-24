@@ -1,14 +1,29 @@
 import { CourseCategoryGrid } from "@/components/cursos/category-grid"
-import { getCategoriesByType } from "@/components/cursos/data"
+import { slugify } from "@/components/cursos/data"
+import { createServerSupabaseClient } from "@/lib/supabase/server"
 
-export default function CursosEmpresasPage() {
+export default async function CursosEmpresasPage() {
+  const supabase = await createServerSupabaseClient()
+  const { data } = await supabase
+    .from("categorias_cursos")
+    .select("*")
+    .eq("tipo", "empresas")
+    .order("nombre")
+
+  const categories = (data ?? []).map((cat) => ({
+    slug: slugify(cat.nombre),
+    title: cat.nombre,
+    description: "",
+    courses: [],
+  }))
+
   return (
     <main className="min-h-[calc(100svh-4.5rem)] bg-white">
       <CourseCategoryGrid
         type="empresas"
         eyebrow="Empresas"
-        subtitle="Cuatro categorias orientadas a equipos, liderazgo y cultura corporativa dentro de una estructura preparada para crecer."
-        categories={getCategoriesByType("empresas")}
+        subtitle="Explora los programas formativos disponibles para empresas."
+        categories={categories}
       />
     </main>
   )
