@@ -1,4 +1,8 @@
+"use client"
+
 import Image from "next/image"
+import { useLanguage } from "@/lib/i18n/language-context"
+import { getMessages } from "@/lib/i18n/messages"
 import styles from "./Section5.module.css"
 
 const collaborators = [
@@ -20,6 +24,9 @@ const collaborators = [
 ]
 
 export default function Section5() {
+  const { language } = useLanguage()
+  const copy = getMessages(language).footer
+
   return (
     <footer className={styles.footer}>
       <div className={styles.wave} aria-hidden="true">
@@ -44,16 +51,15 @@ export default function Section5() {
       <div className={styles.inner}>
         <div className={styles.columns}>
           <div className={styles.brandBlock}>
-            <h2 className={styles.brandTitle}>Formación a tu medida</h2>
+            <h2 className={styles.brandTitle}>{copy.title}</h2>
             <span className={styles.brandDivider} aria-hidden="true" />
             <p className={styles.bodyText}>
-              Impulsamos el talento de personas y empresas con formación
-              practica adaptada al mercado laboral.
+              {copy.description}
             </p>
           </div>
 
           <div className={styles.contactBlock}>
-            <h3 className={styles.blockTitle}>Contacto:</h3>
+            <h3 className={styles.blockTitle}>{copy.contact}</h3>
             <ul className={styles.contactList}>
               <li className={styles.contactItem}>Barcelona, España</li>
               <li className={styles.contactItem}>
@@ -73,7 +79,7 @@ export default function Section5() {
           </div>
 
           <nav className={styles.linksBlock} aria-label="Enlaces del footer">
-            <h3 className={styles.blockTitle}>Colaboradores:</h3>
+            <h3 className={styles.blockTitle}>{copy.collaborators}</h3>
             <ul className={styles.logoList}>
               {collaborators.map((collaborator) => (
                 <li key={collaborator.name}>
@@ -99,20 +105,20 @@ export default function Section5() {
 
         <div className={styles.bottomBar}>
           <p className={styles.copyright}>
-            {"\u00A9"} 2026 Fundapica. Todos los derechos reservados.
+            {"\u00A9"} 2026 Fundapica. {copy.legal}
           </p>
           <nav className={styles.legalLinks} aria-label="Enlaces legales">
             <a
               href="https://www.fundapica.org/aviso-legal-pol%C3%ADtica-de-privacidad-y-pol%C3%ADtica-de-cookies"
               className={styles.legalLink}
             >
-              Política de privacidad y aviso legal
+              {copy.privacy}
             </a>
             <a
               href="https://www.fundapica.org/pol%C3%ADtica-de-calidad"
               className={styles.legalLink}
             >
-              Política de calidad
+              {copy.quality}
             </a>
           </nav>
         </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -28,20 +28,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { getMessages } from "@/lib/i18n/messages"
 import { cn } from "@/lib/utils"
 import { useLanguage, type Language } from "@/lib/i18n/language-context"
-
-const navigationItems = [
-  { href: "/frontend", label: "Inicio" },
-  { href: "/frontend/cursos", label: "Cursos" },
-  { href: "/frontend/news", label: "Noticias" },
-  { href: "/frontend/contacto", label: "Contacto" },
-]
-
-const languageOptions = [
-  { value: "es", label: "Castellano" },
-  { value: "ca", label: "Catalan" },
-]
 
 function isActivePath(pathname: string, href: string) {
   if (href === "/frontend") {
@@ -53,25 +42,32 @@ function isActivePath(pathname: string, href: string) {
 
 type LanguageSwitcherProps = {
   value: Language
+  labels: { languageLabel: string; languageEs: string; languageCa: string }
   onValueChange: (value: Language) => void
   className?: string
 }
 
 function LanguageSwitcher({
   value,
+  labels,
   onValueChange,
   className,
 }: LanguageSwitcherProps) {
+  const languageOptions = [
+    { value: "es", label: labels.languageEs },
+    { value: "ca", label: labels.languageCa },
+  ]
+
   return (
     <div className={cn("relative", className)}>
       <label htmlFor="site-language" className="sr-only">
-        Seleccionar idioma
+        {labels.languageLabel}
       </label>
       <Select value={value} onValueChange={(nextValue) => nextValue && onValueChange(nextValue as Language)}>
         <SelectTrigger
           id="site-language"
-          aria-label="Seleccionar idioma"
-          className="h-10 min-w-[7.75rem] rounded-none border-0 border-b border-slate-200/90 bg-transparent px-1 pr-0 text-sm font-medium text-slate-700 shadow-none transition hover:border-[#75A5E3] hover:bg-transparent hover:text-slate-950 focus-visible:border-[#75A5E3] focus-visible:ring-0 data-[popup-open]:border-[#75A5E3] data-[popup-open]:text-[#75A5E3]"
+          aria-label={labels.languageLabel}
+          className="h-10 min-w-[7.75rem] rounded-none border-0 bg-transparent px-1 pr-0 text-sm font-medium text-slate-700 shadow-none outline-none ring-0 transition hover:bg-transparent hover:text-slate-950 focus-visible:ring-0 data-[popup-open]:text-[#75A5E3]"
         >
           <SelectValue />
         </SelectTrigger>
@@ -97,14 +93,15 @@ function LanguageSwitcher({
 
 type NavLinksProps = {
   pathname: string
+  items: Array<{ href: string; label: string }>
   mobile?: boolean
   onNavigate?: () => void
 }
 
-function NavLinks({ pathname, mobile = false, onNavigate }: NavLinksProps) {
+function NavLinks({ pathname, items, mobile = false, onNavigate }: NavLinksProps) {
   return (
     <>
-      {navigationItems.map((item) => {
+      {items.map((item) => {
         const isActive = isActivePath(pathname, item.href)
 
         const linkClassName = mobile
@@ -115,7 +112,7 @@ function NavLinks({ pathname, mobile = false, onNavigate }: NavLinksProps) {
                 : "text-slate-700 hover:bg-slate-100 hover:text-[#75A5E3]"
             )
           : cn(
-              "px-4 py-2 text-sm font-medium transition-colors duration-200",
+              "px-4 py-2 text-sm font-medium no-underline decoration-transparent border-0 shadow-none outline-none ring-0 transition-colors duration-200",
               isActive
                 ? "text-[#75A5E3]"
                 : "text-slate-600 hover:text-[#75A5E3]"
@@ -124,6 +121,7 @@ function NavLinks({ pathname, mobile = false, onNavigate }: NavLinksProps) {
         if (mobile) {
           return (
             <SheetClose
+              nativeButton={false}
               key={item.href}
               render={
                 <Link
@@ -159,15 +157,39 @@ export function SiteHeader() {
   const pathname = usePathname()
   const isBackofficePanel = pathname.startsWith("/backend/backoffice/panel")
   const { language, setLanguage } = useLanguage()
+  const copy = getMessages(language).header
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const navigationItems = [
+    { href: "/frontend", label: copy.nav.home },
+    { href: "/frontend/cursos", label: copy.nav.courses },
+    { href: "/frontend/news", label: copy.nav.news },
+    { href: "/frontend/contacto", label: copy.nav.contact },
+  ]
+
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 12)
+    }
+
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-black/5 bg-white/75 backdrop-blur-xl">
+    <header
+      className={cn(
+        "sticky top-0 z-50 border-0 shadow-none outline-none backdrop-blur-xl transition-colors duration-300",
+        isScrolled ? "bg-white/80" : "bg-white/55"
+      )}
+    >
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <Link
           href="/frontend"
           className="flex shrink-0 items-center rounded-full transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#75A5E3]/35"
-          aria-label="Ir a Inicio"
+          aria-label={copy.goHome}
         >
           <Image
             src="/logo.webp"
@@ -181,14 +203,14 @@ export function SiteHeader() {
 
         <div className="hidden min-w-0 flex-1 items-center justify-center md:flex">
           <NavigationMenu className="max-w-none flex-1 justify-center">
-            <NavigationMenuList className="gap-1 rounded-none border-0 bg-transparent p-0 shadow-none backdrop-blur-0">
-              <NavLinks pathname={pathname} />
+            <NavigationMenuList className="gap-1 rounded-none border-0 bg-transparent p-0 shadow-none outline-none">
+              <NavLinks pathname={pathname} items={navigationItems} />
             </NavigationMenuList>
           </NavigationMenu>
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          <LanguageSwitcher value={language} onValueChange={setLanguage} />
+          <LanguageSwitcher value={language} labels={copy} onValueChange={setLanguage} />
 
           {isBackofficePanel ? (
             <SignOutButton />
@@ -200,7 +222,7 @@ export function SiteHeader() {
                 "h-10 rounded-full border-0 bg-[#E05780] px-5 text-sm font-semibold text-white shadow-none transition hover:bg-[#75A5E3] focus-visible:ring-[#75A5E3]/35"
               )}
             >
-              Backoffice
+              {copy.backoffice}
             </Link>
           )}
         </div>
@@ -208,13 +230,14 @@ export function SiteHeader() {
         <div className="flex items-center gap-2 md:hidden">
           <LanguageSwitcher
             value={language}
+            labels={copy}
             onValueChange={setLanguage}
             className="max-w-[9.75rem]"
           />
 
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger
-              aria-label="Abrir menu de navegacion"
+              aria-label={copy.openMenu}
               className={cn(
                 buttonVariants({ variant: "outline", size: "icon-lg" }),
                 "size-10 rounded-full border-black/10 bg-white/85 shadow-sm hover:bg-white"
@@ -229,10 +252,10 @@ export function SiteHeader() {
             >
               <div className="pr-10">
                 <SheetTitle className="text-lg font-semibold text-slate-950">
-                  Navegacion
+                  {copy.mobileMenuTitle}
                 </SheetTitle>
                 <SheetDescription className="mt-1 text-sm text-slate-500">
-                  Acceso rapido a las secciones principales de Fundapica.
+                  {copy.mobileMenuDescription}
                 </SheetDescription>
               </div>
 
@@ -240,6 +263,7 @@ export function SiteHeader() {
                 <nav aria-label="Navegacion movil" className="flex flex-col gap-2">
                   <NavLinks
                     pathname={pathname}
+                    items={navigationItems}
                     mobile
                     onNavigate={() => setMobileMenuOpen(false)}
                   />
@@ -247,15 +271,16 @@ export function SiteHeader() {
 
                 <div className="rounded-3xl border border-black/5 bg-slate-50 p-4">
                   <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                    Idioma
+                    {copy.languageBlockTitle}
                   </p>
-                  <LanguageSwitcher value={language} onValueChange={setLanguage} />
+                  <LanguageSwitcher value={language} labels={copy} onValueChange={setLanguage} />
                 </div>
 
                 {isBackofficePanel ? (
                   <SignOutButton />
                 ) : (
                   <SheetClose
+                    nativeButton={false}
                     render={
                       <Link
                         href="/backend/backoffice"
@@ -266,7 +291,7 @@ export function SiteHeader() {
                       />
                     }
                   >
-                    Backoffice
+                    {copy.backoffice}
                   </SheetClose>
                 )}
               </div>

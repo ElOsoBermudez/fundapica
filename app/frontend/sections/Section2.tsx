@@ -1,4 +1,8 @@
+"use client"
+
 import Image from "next/image"
+import { useLanguage } from "@/lib/i18n/language-context"
+import { getMessages } from "@/lib/i18n/messages"
 
 const sections = [
   {
@@ -20,29 +24,29 @@ const sections = [
     description:
       "Impulsamos formación conectada al mercado laboral para crecer profesionalmente.",
     image:
-      "https://images.unsplash.com/photo-1573496799515-eebbb63814f2?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=900&q=80",
   },
 ]
 
 export default function Section2() {
+  const { language } = useLanguage()
+  const copy = getMessages(language).home.section2
+
   return (
     <section className="w-full bg-white px-6 py-24 sm:px-8 lg:px-10 lg:py-28">
       <div className="mx-auto max-w-[1200px]">
         <header className="mb-14 flex flex-col items-center gap-4 text-center sm:mb-16">
           <span className="h-1 w-18 rounded-full bg-[#E05780]" aria-hidden="true" />
           <h2 className="mb-6 font-sans text-6xl font-extrabold tracking-[-0.055em] text-[#E05780] underline decoration-[0.08em] underline-offset-[0.16em] sm:text-7xl lg:text-[90px]">
-            ¿Quiénes somos?
+            {copy.title}
           </h2>
           <p className="max-w-5xl font-[family:var(--font-body)] text-[18px] font-normal leading-7 text-black/65">
-            En la Academia de Entrenamiento Danna Zenon somos una institucion
-            comprometida con el desarrollo del talento y la empleabilidad.
-            Disenamos y ejecutamos programas de formacion adaptados a las
-            necesidades de empresas y personas que buscan una oportunidad de trabajo.
+            {copy.intro}
           </p>
         </header>
 
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-12">
-          {sections.map((section) => (
+          {sections.map((section, index) => (
             <div key={section.title} className="flex flex-col items-center text-center">
               <div className="relative mb-8 h-52 w-52 overflow-hidden rounded-full border border-black/10 bg-[#f8fafc] shadow-[0_10px_30px_rgba(17,17,17,0.06)] sm:h-56 sm:w-56">
                 <Image
@@ -54,10 +58,10 @@ export default function Section2() {
                 />
               </div>
               <h3 className="mb-4 font-sans text-[40px] font-normal text-[#75A5E3] sm:text-[44px] lg:text-[48px]">
-                {section.title}
+                {copy.cards[index]?.title ?? section.title}
               </h3>
               <p className="line-clamp-3 max-w-[32ch] font-[family:var(--font-body)] text-[18px] font-normal leading-7 text-black/65">
-                {section.description}
+                {copy.cards[index]?.description ?? section.description}
               </p>
             </div>
           ))}

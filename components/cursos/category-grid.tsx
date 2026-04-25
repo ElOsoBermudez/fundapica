@@ -1,9 +1,13 @@
+"use client"
+
 import Link from "next/link"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import type { CourseCategory, CourseType } from "@/components/cursos/data"
 import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useLanguage } from "@/lib/i18n/language-context"
+import { getMessages } from "@/lib/i18n/messages"
 import { cn } from "@/lib/utils"
 
 type CategoryGridProps = {
@@ -19,6 +23,14 @@ export function CourseCategoryGrid({
   subtitle,
   categories,
 }: CategoryGridProps) {
+  const { language } = useLanguage()
+  const messages = getMessages(language)
+  const copy = messages.courses.common
+  const audienceLabel =
+    language === "ca" ? messages.courses.audiences[type].title : eyebrow
+  const localizedSubtitle =
+    language === "ca" ? messages.courses.listings[type] : subtitle
+
   return (
     <section className="mx-auto flex min-h-[calc(100svh-4.5rem)] w-full max-w-6xl flex-col justify-center px-4 py-16 sm:px-6 lg:py-24">
       <div className="w-full">
@@ -30,18 +42,18 @@ export function CourseCategoryGrid({
           )}
         >
           <ChevronLeft className="size-4" />
-          Volver
+          {copy.back}
         </Link>
 
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#75A5E3]">
-            {eyebrow}
+            {audienceLabel}
           </p>
           <h1 className="mt-4 font-sans text-6xl font-extrabold tracking-[-0.055em] text-[#E05780] sm:text-7xl lg:text-[90px]">
-            Categorias
+            {copy.categoriesTitle}
           </h1>
           <p className="mt-5 font-[family:var(--font-body)] text-[18px] leading-7 text-black/65 sm:text-[20px]">
-            {subtitle}
+            {localizedSubtitle}
           </p>
         </div>
 

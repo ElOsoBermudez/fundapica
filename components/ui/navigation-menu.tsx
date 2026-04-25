@@ -26,7 +26,7 @@ const NavigationMenuList = React.forwardRef<
     ref={ref}
     data-slot="navigation-menu-list"
     className={cn(
-      "group flex flex-1 list-none items-center justify-center gap-1 rounded-full border border-border/60 bg-background/80 p-1 shadow-sm backdrop-blur-sm",
+      "group flex flex-1 list-none items-center justify-center gap-1 rounded-full border-0 bg-transparent p-0 shadow-none outline-none",
       className
     )}
     {...props}

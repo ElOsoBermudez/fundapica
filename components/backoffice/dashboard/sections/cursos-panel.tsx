@@ -224,13 +224,20 @@ export function CursosPanel() {
 
   const handleEliminar = async (id: string) => {
     const supabase = createBrowserSupabaseClient()
-    const { error } = await supabase.from("cursos").delete().eq("id", id)
-    if (!error) {
+    const { data, error } = await supabase
+      .from("cursos")
+      .delete()
+      .eq("id", id)
+      .select("id")
+
+    if (!error && data && data.length > 0) {
       setCursos((prev) => prev.filter((c) => c.id !== id))
       if (editingId === id) resetForm()
       toast.success("Curso eliminado")
+    } else if (!error) {
+      toast.error("No se pudo eliminar el curso. Revisa permisos RLS de DELETE para admin.")
     } else {
-      toast.error("Error al eliminar el curso")
+      toast.error(`Error al eliminar el curso: ${error.message}`)
     }
   }
 
@@ -268,7 +275,7 @@ export function CursosPanel() {
     const supabase = createBrowserSupabaseClient()
 
     if (editingId) {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("cursos")
         .update({
           titulo: titulo.trim(),
@@ -280,7 +287,8 @@ export function CursosPanel() {
           pdf_url: pdfUrl || null,
         })
         .eq("id", editingId)
-      if (!error) {
+        .select("id")
+      if (!error && data && data.length > 0) {
         toast.success("Curso actualizado correctamente")
         setCursos((prev) => prev.map((c) =>
           c.id === editingId ? {
@@ -298,8 +306,10 @@ export function CursosPanel() {
         const savedId = editingId
         resetForm()
         autoTranslate(savedId, titulo.trim(), descripcion.trim() || null, contenido || null)
+      } else if (!error) {
+        toast.error("No se pudo actualizar el curso. Revisa permisos RLS de UPDATE para admin.")
       } else {
-        toast.error("Error al actualizar el curso")
+        toast.error(`Error al actualizar el curso: ${error.message}`)
       }
     } else {
       const { data, error } = await supabase
@@ -334,7 +344,7 @@ export function CursosPanel() {
         resetForm()
         autoTranslate(data.id, titulo.trim(), descripcion.trim() || null, contenido || null)
       } else {
-        toast.error("Error al guardar el curso, inténtalo de nuevo")
+        toast.error(`Error al guardar el curso: ${error?.message ?? "inténtalo de nuevo"}`)
       }
     }
     setSaving(false)

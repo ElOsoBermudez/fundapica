@@ -1,6 +1,13 @@
-﻿import SlideTextButton from "@/components/kokonutui/slide-text-button"
+﻿"use client"
+
+import SlideTextButton from "@/components/kokonutui/slide-text-button"
+import { useLanguage } from "@/lib/i18n/language-context"
+import { getMessages } from "@/lib/i18n/messages"
 
 export default function Section1() {
+  const { language } = useLanguage()
+  const copy = getMessages(language).home.section1
+
   return (
     <section
       className="min-h-[600px] w-screen min-w-[1200px] overflow-hidden bg-white"
@@ -19,17 +26,21 @@ export default function Section1() {
               className="max-w-[10ch] font-bold text-[#E05780] sm:text-5xl lg:text-6xl xl:text-[4.75rem] 2xl:text-[6rem]"
               style={{ lineHeight: "0.8em", letterSpacing: "-0.03em", fontSize: "7.4em" }}
             >
-              <span className="block whitespace-nowrap">Formación<br/>
-              personalizada<br/>
-              para llegar<br/>
-             más lejos</span>
+              <span className="block whitespace-nowrap">
+                {copy.titleLines.map((line, index) => (
+                  <span key={line}>
+                    {line}
+                    {index < copy.titleLines.length - 1 ? <br /> : null}
+                  </span>
+                ))}
+              </span>
             </h1>
             <p className="text-2xl font-medium text-[#75A5E3] sm:text-3xl lg:text-4xl">
-              Academia Fundapica
+              {copy.subtitle}
             </p>
             <SlideTextButton
               href="/frontend/cursos"
-              text="Empieza ahora"
+              text={copy.cta}
               className="mt-24 !min-w-0 bg-[#E05780] text-[#fafafa] hover:bg-[#d14d74]"
             />
           </div>

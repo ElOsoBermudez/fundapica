@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
@@ -9,6 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { useLanguage } from "@/lib/i18n/language-context"
+import { getMessages } from "@/lib/i18n/messages"
 import { cn } from "@/lib/utils"
 
 function Label({
@@ -42,34 +46,32 @@ function Textarea({
   )
 }
 
-const officeHours = [
-  { day: "Lunes a Viernes", hours: "9:00 - 14:00 y 15:00 - 18:00" },
-  { day: "Sabados y Domingos", hours: "Cerrado" },
-]
-
 export default function ContactoPage() {
+  const { language } = useLanguage()
+  const copy = getMessages(language).contact
+
   return (
     <main className="min-h-[calc(100svh-4.5rem)] bg-white">
       <section className="mx-auto grid max-w-5xl gap-8 px-4 py-24 md:grid-cols-2 md:items-center md:gap-12 md:py-28">
         <Card className="border-foreground/10 shadow-sm">
           <CardHeader className="space-y-2">
             <CardTitle className="font-sans text-2xl font-bold tracking-[-0.04em] text-[#75A5E3]">
-              Contacta con nosotros
+              {copy.cardTitle}
             </CardTitle>
             <CardDescription>
-              Cuentanos que necesitas y te responderemos lo antes posible.
+              {copy.cardDescription}
             </CardDescription>
           </CardHeader>
 
           <CardContent>
             <form className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="nombre">Nombre</Label>
-                <Input id="nombre" name="nombre" placeholder="Tu nombre" required />
+                <Label htmlFor="nombre">{copy.name}</Label>
+                <Input id="nombre" name="nombre" placeholder={copy.namePlaceholder} required />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="correo">Correo</Label>
+                <Label htmlFor="correo">{copy.email}</Label>
                 <Input
                   id="correo"
                   name="correo"
@@ -80,27 +82,27 @@ export default function ContactoPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="telefono">Telefono</Label>
+                <Label htmlFor="telefono">{copy.phone}</Label>
                 <Input
                   id="telefono"
                   name="telefono"
                   type="tel"
-                  placeholder="600 000 000"
+                  placeholder={copy.phonePlaceholder}
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="mensaje">Mensaje</Label>
+                <Label htmlFor="mensaje">{copy.message}</Label>
                 <Textarea
                   id="mensaje"
                   name="mensaje"
-                  placeholder="Escribe aqui tu consulta si quieres darnos mas contexto."
+                  placeholder={copy.messagePlaceholder}
                 />
               </div>
 
               <Button className="w-full sm:w-auto" type="submit">
-                Enviar
+                {copy.submit}
               </Button>
             </form>
           </CardContent>
@@ -109,12 +111,10 @@ export default function ContactoPage() {
         <div className="space-y-6">
           <div className="space-y-3">
             <h1 className="font-sans text-4xl font-extrabold tracking-[-0.055em] text-balance text-[#E05780] sm:text-5xl lg:text-6xl">
-              ¡Contáctanos!
+              {copy.pageTitle}
             </h1>
             <p className="max-w-xl text-base leading-7 text-muted-foreground">
-              Estamos aqui para ayudarte. Si tienes una duda sobre nuestros
-              servicios, horarios o la mejor forma de empezar, escribenos y te
-              orientamos con cercania y claridad.
+              {copy.pageDescription}
             </p>
           </div>
 
@@ -127,7 +127,7 @@ export default function ContactoPage() {
             </CardHeader> */}
 
             <CardContent className="space-y-4">
-              {officeHours.map((schedule) => (
+              {copy.officeHours.map((schedule) => (
                 <div
                   key={schedule.day}
                   className="flex items-center justify-between gap-4 border-b border-foreground/10 pb-4 last:border-b-0 last:pb-0"
@@ -143,7 +143,7 @@ export default function ContactoPage() {
         <Card className="border-foreground/10 shadow-sm md:col-span-2">
           <CardHeader className="space-y-2">
             <CardTitle className="font-sans text-xl font-bold tracking-[-0.04em] text-[#75A5E3]">
-              Nuestra ubicación
+              {copy.locationTitle}
             </CardTitle>
             <CardDescription>
             📍 Carrer de Rocafort, 67 - 69, local 10, Eixample, 08015 Barcelona

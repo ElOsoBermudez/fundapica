@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { Check, ChevronRight } from "lucide-react"
 
@@ -11,26 +13,40 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useLanguage } from "@/lib/i18n/language-context"
+import { getMessages } from "@/lib/i18n/messages"
 import { cn } from "@/lib/utils"
 
 export function CoursesHeroSelector() {
+  const { language } = useLanguage()
+  const copy = getMessages(language).courses
+  const localizedAudiences = courseAudiences.map((audience) => {
+    const localized = copy.audiences[audience.type]
+    return {
+      ...audience,
+      title: localized.title,
+      description: localized.description,
+      points: localized.points,
+      buttonLabel: localized.buttonLabel,
+    }
+  })
+
   return (
     <section className="mx-auto flex min-h-[calc(100svh-4.5rem)] w-full max-w-6xl flex-col justify-center px-4 py-16 sm:px-6 lg:py-24">
       <div className="mx-auto max-w-3xl text-center">
         <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#75A5E3]">
-          Oferta formativa
+          {copy.hero.eyebrow}
         </p>
         <h1 className="mt-4 font-sans text-5xl font-extrabold tracking-[-0.055em] text-[#E05780] sm:text-6xl lg:text-7xl">
-          Cursos
+          {copy.hero.title}
         </h1>
         <p className="mt-5 font-[family:var(--font-body)] text-[18px] leading-7 text-black/65 sm:text-[20px]">
-          Selecciona el itinerario que mejor encaja contigo y navega por categorías y cursos
-          con una experiencia visual alineada con la home.
+          {copy.hero.description}
         </p>
       </div>
 
       <div className="mt-12 grid gap-6 lg:grid-cols-2">
-        {courseAudiences.map((audience) => {
+        {localizedAudiences.map((audience) => {
           const Icon = audience.icon
 
           return (
