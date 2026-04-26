@@ -12,7 +12,7 @@ export const Logo = ({ className, ...props }: LogoProps) => {
     <Image
       alt="logo"
       className={cn("size-7", className)}
-      src="/images/android-chrome-192x192.png"
+      src="/logo.webp"
       height={28}
       width={28}
       {...props}

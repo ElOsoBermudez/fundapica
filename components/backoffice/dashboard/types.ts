@@ -1,11 +1,11 @@
-export type DashboardMainView = "dashboard" | "noticias" | "cursos" | "content" | "media" | "settings"
+export type DashboardMainView = "dashboard" | "noticias" | "cursos" | "content" | "planning" | "settings"
 
 export type ContentSectionKey = "news" | "blog" | "courses"
 
 export type SettingsSectionKey = "general" | "access"
 
 export type ContentModule = {
-  id: string
+  id: ContentSectionKey
   title: string
   description: string
   action: string

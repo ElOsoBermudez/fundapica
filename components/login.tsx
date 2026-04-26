@@ -3,15 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import {
   getDefaultRedirectPath,
   getSafeRedirectPath,
+  isAdminRole,
 } from "@/lib/auth/roles";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import type { AppRole, Profile } from "@/lib/supabase/types";
-import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -22,10 +23,31 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const logoutToastShownRef = useRef(false);
   const routeError =
     searchParams.get("reason") === "auth-required"
       ? "Inicia sesión para continuar."
       : "";
+
+  useEffect(() => {
+    if (
+      searchParams.get("auth") !== "signed-out" ||
+      logoutToastShownRef.current
+    ) {
+      return;
+    }
+
+    logoutToastShownRef.current = true;
+    toast.success("Sesión cerrada correctamente.");
+
+    const nextParams = new URLSearchParams(searchParams.toString());
+    nextParams.delete("auth");
+    const nextQuery = nextParams.toString();
+
+    router.replace(
+      nextQuery ? `/backend/backoffice?${nextQuery}` : "/backend/backoffice",
+    );
+  }, [router, searchParams]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -65,6 +87,13 @@ const Login = () => {
       return;
     }
 
+    if (!isAdminRole(profile?.role)) {
+      await supabase.auth.signOut();
+      setLoading(false);
+      setError("Esta cuenta no tiene permisos de administrador.");
+      return;
+    }
+
     const fallbackPath = getDefaultRedirectPath(
       (profile?.role as AppRole | undefined) ?? "user",
     );
@@ -73,7 +102,10 @@ const Login = () => {
       fallbackPath,
     );
 
-    router.replace(redirectPath);
+    const redirectUrl = new URL(redirectPath, window.location.origin);
+    redirectUrl.searchParams.set("auth", "signed-in");
+
+    router.replace(`${redirectUrl.pathname}${redirectUrl.search}`);
     router.refresh();
   };
 
@@ -81,7 +113,15 @@ const Login = () => {
     <div className="flex min-h-screen items-center justify-center bg-slate-50">
       <div className="flex h-full w-full p-4">
         <div className="m-auto flex w-full max-w-md flex-col items-center rounded-[32px] border border-white/70 bg-white/95 p-8 shadow-[0_24px_60px_rgba(15,23,42,0.08)]">
-          <Logo className="h-10 w-10" />
+          <Image
+            alt="Fundapica"
+            className="h-14 w-auto"
+            height={378}
+            priority
+            quality={100}
+            src="/logo.png"
+            width={1038}
+          />
           <p className="mt-5 text-xs font-semibold uppercase tracking-[0.24em] text-[#E05780]">
             Backoffice Fundapica
           </p>
@@ -142,7 +182,7 @@ const Login = () => {
             className="absolute inset-0 size-full rounded-xl object-cover"
             fill
             sizes="(min-width: 1024px) 50vw, 100vw"
-            src="/images/ascii-art.png"
+            src="/background-home.webp"
           />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { FolderKanban, ImageIcon, ShieldCheck, UploadCloud } from "lucide-react"
+import { CalendarDays, CheckCircle2, ClipboardList, ShieldCheck } from "lucide-react"
 
 import {
   Card,
@@ -9,45 +9,45 @@ import {
 } from "@/components/ui/card"
 import { LinkButton, ModuleHero } from "@/components/backoffice/dashboard/shared"
 
-const mediaAreas = [
+const planningAreas = [
   {
-    title: "Portadas editoriales",
+    title: "Publicaciones",
     description:
-      "Imágenes principales para noticias, artículos y cursos, con versiones optimizadas para escritorio y móvil.",
-    folder: "media/cover-images",
+      "Planifica noticias, cursos y piezas clave con una fecha clara y un responsable definido.",
+    detail: "Define que sale, cuando sale y en que canal.",
   },
   {
-    title: "Galería institucional",
+    title: "Revisiones",
     description:
-      "Fotografías de actividades, jornadas y vida del centro listas para reutilizar en distintas páginas.",
-    folder: "media/gallery",
+      "Agrupa los contenidos que necesitan correccion, validacion o una segunda revision.",
+    detail: "Evita publicar textos sin revisar.",
   },
   {
-    title: "Recursos de cursos",
+    title: "Seguimiento",
     description:
-      "Material visual y descargables vinculados a la oferta formativa, manteniendo orden por programa o edición.",
-    folder: "media/courses",
+      "Manten a la vista las tareas abiertas para que el equipo no pierda el hilo.",
+    detail: "Ideal para cambios pendientes y cierres semanales.",
   },
 ]
 
-export function MediaPanel({ isAdmin }: { isAdmin: boolean }) {
+export function PlanningPanel({ isAdmin }: { isAdmin: boolean }) {
   return (
     <section className="space-y-4">
       <ModuleHero
-        badge="Media"
-        title="Biblioteca visual y cargas del sitio"
-        description="Aquí conviene concentrar imágenes, portadas y recursos de apoyo para que el contenido editorial no dependa de carpetas desordenadas ni de cargas improvisadas."
+        badge="Planificacion"
+        title="Plan editorial del equipo"
+        description="Un espacio mas util para organizar publicaciones, revisiones y tareas del panel."
         actions={
           <LinkButton href="/frontend">
-            Revisar cómo se ve en el sitio
+            Ver sitio publico
           </LinkButton>
         }
       />
 
       <div className="grid gap-4 lg:grid-cols-3">
-        {mediaAreas.map((area, index) => {
-          const icons = [ImageIcon, FolderKanban, UploadCloud]
-          const Icon = icons[index] ?? ImageIcon
+        {planningAreas.map((area, index) => {
+          const icons = [CalendarDays, ClipboardList, CheckCircle2]
+          const Icon = icons[index] ?? CalendarDays
 
           return (
             <Card
@@ -62,7 +62,7 @@ export function MediaPanel({ isAdmin }: { isAdmin: boolean }) {
                 <CardDescription>{area.description}</CardDescription>
               </CardHeader>
               <CardContent className="text-sm text-muted-foreground">
-                Carpeta sugerida: <span className="font-medium text-foreground">{area.folder}</span>
+                {area.detail}
               </CardContent>
             </Card>
           )
@@ -72,23 +72,23 @@ export function MediaPanel({ isAdmin }: { isAdmin: boolean }) {
       <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
         <Card className="border-white/70 bg-white/95 shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
           <CardHeader>
-            <CardTitle className="text-xl">Criterio para subir archivos</CardTitle>
+            <CardTitle className="text-xl">Criterio de trabajo</CardTitle>
             <CardDescription>
-              Una biblioteca bien cuidada evita duplicados, mejora el rendimiento y acelera la publicación.
+              Un flujo claro reduce errores y agiliza la publicacion.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
             <div className="rounded-2xl border border-border/70 p-4">
-              Nombrar cada archivo con contexto real: sección, fecha o campaña.
+              Define una prioridad para cada tarea.
             </div>
             <div className="rounded-2xl border border-border/70 p-4">
-              Mantener imágenes comprimidas y con dimensiones coherentes antes de publicarlas.
+              Marca siempre responsable y fecha.
             </div>
             <div className="rounded-2xl border border-border/70 p-4">
-              Reservar documentos pesados para materiales de cursos o descargas concretas.
+              Revisa ortografia y enlaces antes de publicar.
             </div>
             <div className="rounded-2xl border border-border/70 p-4">
-              Revisar periódicamente archivos sin uso para que la biblioteca siga siendo manejable.
+              Cierra tareas resueltas para mantener orden.
             </div>
           </CardContent>
         </Card>
@@ -98,19 +98,19 @@ export function MediaPanel({ isAdmin }: { isAdmin: boolean }) {
             <div className="flex size-12 items-center justify-center rounded-2xl bg-white/10 text-white">
               <ShieldCheck className="size-5" />
             </div>
-            <CardTitle className="text-xl">Permisos en media</CardTitle>
+            <CardTitle className="text-xl">Uso del panel</CardTitle>
             <CardDescription className="text-white/72">
-              Acciones recomendadas según el perfil activo.
+              Recomendaciones segun el perfil activo.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-white/82">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               {isAdmin
-                ? "Como administrador puedes ordenar carpetas, reemplazar recursos y depurar archivos que ya no se usan."
-                : "Como editor puedes preparar archivos y mantener la biblioteca al día, pero lo ideal es reservar eliminaciones y cambios estructurales para administración."}
+                ? "Como administrador puedes definir prioridades, revisar avances y ordenar el trabajo del equipo."
+                : "Como editor puedes preparar contenidos, actualizar tareas y dejar notas claras para la siguiente revision."}
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              Conviene añadir metadatos básicos: tipo de uso, módulo asociado y fecha de actualización.
+              Usa descripciones cortas, fechas visibles y estados simples para que el panel sea facil de mantener.
             </div>
           </CardContent>
         </Card>

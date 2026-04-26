@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import OpenAI from "openai"
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-
 type TranslateRequest = {
   fields: Record<string, string | null>
   targetLang: "es" | "ca"
@@ -15,6 +13,11 @@ const LANG_NAMES: Record<string, string> = {
 
 export async function POST(req: NextRequest) {
   try {
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json({ error: "Falta configurar OPENAI_API_KEY" }, { status: 500 })
+    }
+
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
     const body: TranslateRequest = await req.json()
     const { fields, targetLang } = body
 

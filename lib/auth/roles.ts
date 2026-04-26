@@ -1,6 +1,6 @@
 import type { AppRole } from "@/lib/supabase/types";
 
-export const DEFAULT_USER_REDIRECT = "/backend/backoffice/panel";
+export const DEFAULT_USER_REDIRECT = "/frontend";
 export const DEFAULT_ADMIN_REDIRECT = "/backend/backoffice/panel";
 
 export function isAdminRole(role: AppRole | null | undefined): role is "admin" {

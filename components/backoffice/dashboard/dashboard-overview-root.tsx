@@ -1,20 +1,22 @@
 "use client"
 
-import { useSearchParams } from "next/navigation"
+import { useEffect, useRef } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import {
   BookOpenText,
   FolderKanban,
   Newspaper,
   Settings2,
 } from "lucide-react"
+import { toast } from "sonner"
 
 import { contentModules } from "@/components/backoffice/dashboard/data"
-import { ResumenPanel } from "@/components/backoffice/dashboard/sections/resumen-panel"
-import { NoticiasPanel } from "@/components/backoffice/dashboard/sections/noticias-panel"
-import { CursosPanel } from "@/components/backoffice/dashboard/sections/cursos-panel"
-import { ContentPanel } from "@/components/backoffice/dashboard/sections/content-panel"
-import { MediaPanel } from "@/components/backoffice/dashboard/sections/media-panel"
 import { ConfiguracionPanel } from "@/components/backoffice/dashboard/sections/configuracion-panel"
+import { ContentPanel } from "@/components/backoffice/dashboard/sections/content-panel"
+import { CursosPanel } from "@/components/backoffice/dashboard/sections/cursos-panel"
+import { NoticiasPanel } from "@/components/backoffice/dashboard/sections/noticias-panel"
+import { PlanningPanel } from "@/components/backoffice/dashboard/sections/media-panel"
+import { ResumenPanel } from "@/components/backoffice/dashboard/sections/resumen-panel"
 import type {
   ContentSectionKey,
   DashboardMainView,
@@ -30,7 +32,7 @@ function getCurrentView(rawView: string | null, isAdmin: boolean): DashboardMain
     return "content"
   }
 
-  if (rawView === "content" || rawView === "media") {
+  if (rawView === "content" || rawView === "planning") {
     return rawView
   }
 
@@ -65,7 +67,9 @@ function getSettingsSection(rawSection: string | null): SettingsSectionKey {
 }
 
 export function DashboardOverview({ role }: { role: AppRole | null | undefined }) {
+  const router = useRouter()
   const searchParams = useSearchParams()
+  const loginToastShownRef = useRef(false)
   const isAdmin = role === "admin"
   const currentView = getCurrentView(searchParams.get("view"), isAdmin)
   const contentSection = getContentSection(
@@ -77,24 +81,44 @@ export function DashboardOverview({ role }: { role: AppRole | null | undefined }
   const selectedContentModule =
     contentModules.find((module) => module.id === contentSection) ?? contentModules[0]
 
+  useEffect(() => {
+    if (
+      searchParams.get("auth") !== "signed-in" ||
+      loginToastShownRef.current
+    ) {
+      return
+    }
+
+    loginToastShownRef.current = true
+    toast.success("Sesión iniciada correctamente.")
+
+    const nextParams = new URLSearchParams(searchParams.toString())
+    nextParams.delete("auth")
+    const nextQuery = nextParams.toString()
+
+    router.replace(
+      nextQuery ? `/backend/backoffice/panel?${nextQuery}` : "/backend/backoffice/panel"
+    )
+  }, [router, searchParams])
+
   const statCards = isAdmin
     ? [
         {
-          label: "Módulos editoriales",
+          label: "Modulos editoriales",
           value: `${contentModules.length}`,
-          helper: "Noticias, blog y cursos con identidad propia dentro del panel.",
+          helper: "Noticias, blog y cursos con gestion separada.",
           icon: Newspaper,
         },
         {
-          label: "Áreas de media",
+          label: "Bloques de trabajo",
           value: "03",
-          helper: "Biblioteca preparada para portadas, galerías y recursos de cursos.",
+          helper: "Resumen, contenido y planificacion en un solo panel.",
           icon: FolderKanban,
         },
         {
-          label: "Bloques de control",
+          label: "Control",
           value: "02",
-          helper: "Configuración y acceso reservados para decisiones globales del sitio.",
+          helper: "Configuracion y accesos para la gestion general.",
           icon: Settings2,
         },
       ]
@@ -102,19 +126,19 @@ export function DashboardOverview({ role }: { role: AppRole | null | undefined }
         {
           label: "Flujos editoriales",
           value: `${contentModules.length}`,
-          helper: "Rutas claras para mantener noticias, blog y cursos sin dispersión.",
+          helper: "Noticias, blog y cursos con rutas claras.",
           icon: Newspaper,
         },
         {
-          label: "Biblioteca media",
+          label: "Plan semanal",
           value: "01",
-          helper: "Un único punto para preparar imágenes y recursos antes de publicar.",
+          helper: "Vista rapida de tareas y publicaciones pendientes.",
           icon: FolderKanban,
         },
         {
           label: "Piezas clave",
           value: "03",
-          helper: "Noticias, artículos y cursos con enfoque editorial definido.",
+          helper: "Tres areas principales para publicar contenido.",
           icon: BookOpenText,
         },
       ]
@@ -130,7 +154,7 @@ export function DashboardOverview({ role }: { role: AppRole | null | undefined }
         isAdmin={isAdmin}
       />
     ),
-    media: <MediaPanel isAdmin={isAdmin} />,
+    planning: <PlanningPanel isAdmin={isAdmin} />,
     settings: isAdmin ? (
       <ConfiguracionPanel selectedSection={settingsSection} />
     ) : (

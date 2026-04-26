@@ -5,6 +5,26 @@ import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
 import { Bold, Italic, List, ListOrdered, Heading2, Undo, Redo } from "lucide-react"
 
+function ToolbarButton({
+  onClick,
+  active,
+  children,
+}: {
+  onClick: () => void
+  active?: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded p-1.5 hover:bg-accent hover:text-accent-foreground ${active ? "bg-accent text-accent-foreground" : ""}`}
+    >
+      {children}
+    </button>
+  )
+}
+
 export function RichTextEditor({ onChange, defaultContent }: { onChange?: (html: string) => void, defaultContent?: string }) {
   const editor = useEditor({
     immediatelyRender: false,
@@ -25,24 +45,6 @@ export function RichTextEditor({ onChange, defaultContent }: { onChange?: (html:
   })
 
   if (!editor) return null
-
-  const ToolbarButton = ({
-    onClick,
-    active,
-    children,
-  }: {
-    onClick: () => void
-    active?: boolean
-    children: React.ReactNode
-  }) => (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded p-1.5 hover:bg-accent hover:text-accent-foreground ${active ? "bg-accent text-accent-foreground" : ""}`}
-    >
-      {children}
-    </button>
-  )
 
   return (
     <div>

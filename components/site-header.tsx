@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { motion } from "motion/react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -96,26 +97,40 @@ type NavLinksProps = {
   items: Array<{ href: string; label: string }>
   mobile?: boolean
   onNavigate?: () => void
+  hoveredHref?: string | null
+  onHoverChange?: (href: string | null) => void
 }
 
-function NavLinks({ pathname, items, mobile = false, onNavigate }: NavLinksProps) {
+function NavLinks({
+  pathname,
+  items,
+  mobile = false,
+  onNavigate,
+  hoveredHref,
+  onHoverChange,
+}: NavLinksProps) {
+  const highlightedHref = hoveredHref
+
   return (
     <>
       {items.map((item) => {
         const isActive = isActivePath(pathname, item.href)
+        const isHighlighted = highlightedHref === item.href
 
         const linkClassName = mobile
           ? cn(
-              "flex items-center rounded-2xl px-4 py-3 text-base font-medium transition",
+              "flex items-center rounded-[1.35rem] border px-4 py-3 text-base font-medium transition-all duration-200",
               isActive
-                ? "bg-[#75A5E3] text-white shadow-sm"
-                : "text-slate-700 hover:bg-slate-100 hover:text-[#75A5E3]"
+                ? "border-[#75A5E3]/20 bg-gradient-to-r from-[#75A5E3] to-[#8bb5ec] text-white shadow-[0_14px_30px_rgba(117,165,227,0.24)]"
+                : "border-black/5 bg-white text-slate-700 hover:border-[#75A5E3]/15 hover:bg-[#75A5E3]/6 hover:text-slate-950"
             )
           : cn(
-              "px-4 py-2 text-sm font-medium no-underline decoration-transparent border-0 shadow-none outline-none ring-0 transition-colors duration-200",
-              isActive
+              "relative flex h-11 items-center justify-center rounded-full px-5 text-sm font-semibold tracking-[0.01em] no-underline decoration-transparent border-0 shadow-none outline-none ring-0 transition-colors duration-200",
+              isHighlighted
                 ? "text-[#75A5E3]"
-                : "text-slate-600 hover:text-[#75A5E3]"
+                : isActive
+                  ? "text-[#75A5E3]"
+                  : "text-slate-600 hover:text-[#75A5E3]"
             )
 
         if (mobile) {
@@ -143,8 +158,26 @@ function NavLinks({ pathname, items, mobile = false, onNavigate }: NavLinksProps
               href={item.href}
               className={linkClassName}
               aria-current={isActive ? "page" : undefined}
+              onMouseEnter={() => onHoverChange?.(item.href)}
+              onFocus={() => onHoverChange?.(item.href)}
+              onBlur={() => onHoverChange?.(null)}
             >
-              {item.label}
+              {isHighlighted ? (
+                <motion.span
+                  layoutId="site-header-nav-highlight"
+                  className="pointer-events-none absolute inset-0 rounded-full border border-white/75 bg-gradient-to-r from-[#75A5E3]/18 via-white to-[#E05780]/18 shadow-[0_12px_28px_rgba(117,165,227,0.18)]"
+                  transition={{ type: "spring", stiffness: 360, damping: 28, mass: 0.8 }}
+                />
+              ) : null}
+              {isActive ? (
+                <span
+                  className={cn(
+                    "pointer-events-none absolute inset-x-5 bottom-1.5 h-0.5 rounded-full bg-gradient-to-r from-[#75A5E3] to-[#E05780] transition-opacity duration-200",
+                    isHighlighted ? "opacity-100" : "opacity-60"
+                  )}
+                />
+              ) : null}
+              <span className="relative z-10">{item.label}</span>
             </Link>
           </NavigationMenuItem>
         )
@@ -158,6 +191,7 @@ export function SiteHeader() {
   const isBackofficePanel = pathname.startsWith("/backend/backoffice/panel")
   const { language, setLanguage } = useLanguage()
   const copy = getMessages(language).header
+  const [desktopHoveredHref, setDesktopHoveredHref] = useState<string | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const navigationItems = [
@@ -203,8 +237,16 @@ export function SiteHeader() {
 
         <div className="hidden min-w-0 flex-1 items-center justify-center md:flex">
           <NavigationMenu className="max-w-none flex-1 justify-center">
-            <NavigationMenuList className="gap-1 rounded-none border-0 bg-transparent p-0 shadow-none outline-none">
-              <NavLinks pathname={pathname} items={navigationItems} />
+            <NavigationMenuList
+              className="gap-1.5 rounded-full border border-white/90 bg-white/70 p-1.5 shadow-[0_18px_45px_rgba(15,23,42,0.08)] backdrop-blur-xl"
+              onMouseLeave={() => setDesktopHoveredHref(null)}
+            >
+              <NavLinks
+                pathname={pathname}
+                items={navigationItems}
+                hoveredHref={desktopHoveredHref}
+                onHoverChange={setDesktopHoveredHref}
+              />
             </NavigationMenuList>
           </NavigationMenu>
         </div>

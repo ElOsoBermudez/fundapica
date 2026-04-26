@@ -24,6 +24,11 @@ const RichTextEditor = dynamic(
 const ALLOWED_TYPES = ["image/jpg", "image/jpeg", "image/png", "image/webp"]
 const MAX_SIZE = 5 * 1024 * 1024
 
+function isRlsDeleteError(message: string) {
+  const normalized = message.toLowerCase()
+  return normalized.includes("row-level security") || normalized.includes("42501")
+}
+
 type TipoCurso = "personas" | "empresas" | "ambos"
 type TipoCategoria = "personas" | "empresas"
 
@@ -235,9 +240,13 @@ export function CursosPanel() {
       if (editingId === id) resetForm()
       toast.success("Curso eliminado")
     } else if (!error) {
-      toast.error("No se pudo eliminar el curso. Revisa permisos RLS de DELETE para admin.")
+      toast.error("El curso no se eliminó. Comprueba que tu cuenta tenga rol admin y que la policy DELETE esté aplicada.")
     } else {
-      toast.error(`Error al eliminar el curso: ${error.message}`)
+      toast.error(
+        isRlsDeleteError(error.message)
+          ? "No tienes permisos para eliminar cursos. Tu usuario debe tener rol admin en Supabase."
+          : `Error al eliminar el curso: ${error.message}`
+      )
     }
   }
 

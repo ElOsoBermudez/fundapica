@@ -16,7 +16,7 @@ export function SignOutButton() {
     const supabase = createBrowserSupabaseClient();
     await supabase.auth.signOut();
 
-    router.replace("/backend/backoffice");
+    router.replace("/backend/backoffice?auth=signed-out");
     router.refresh();
   };
 

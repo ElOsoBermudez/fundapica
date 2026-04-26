@@ -40,6 +40,9 @@ supabase/add_translations.sql
 
 -- 3) RLS policies for backoffice write access
 supabase/backoffice_policies.sql
+
+-- 4) promote the backoffice account to admin
+supabase/grant_admin.sql
 ```
 
 ##BACKOFFICE

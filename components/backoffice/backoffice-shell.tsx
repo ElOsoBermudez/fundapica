@@ -4,8 +4,8 @@ import Link from "next/link"
 import { usePathname, useSearchParams } from "next/navigation"
 import type { ReactNode } from "react"
 import {
+  CalendarDays,
   GraduationCap,
-  Images,
   LayoutDashboard,
   Newspaper,
 } from "lucide-react"
@@ -34,7 +34,7 @@ type BackofficeShellProps = {
   userEmail: string | null | undefined
 }
 
-function getNavItems(_isAdmin: boolean) {
+function getNavItems() {
   return [
     {
       href: "/backend/backoffice/panel?view=dashboard",
@@ -55,10 +55,10 @@ function getNavItems(_isAdmin: boolean) {
       icon: GraduationCap,
     },
     {
-      href: "/backend/backoffice/panel?view=media",
-      view: "media",
-      label: "Fotos y videos",
-      icon: Images,
+      href: "/backend/backoffice/panel?view=planning",
+      view: "planning",
+      label: "Planificacion",
+      icon: CalendarDays,
     },
   ]
 }
@@ -70,7 +70,7 @@ export function BackofficeShell({
 }: BackofficeShellProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const navItems = getNavItems(role === "admin")
+  const navItems = getNavItems()
 
   const currentView = searchParams.get("view") ?? "dashboard"
 
