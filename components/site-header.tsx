@@ -15,13 +15,6 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
   Sheet,
   SheetClose,
   SheetContent,
@@ -41,53 +34,51 @@ function isActivePath(pathname: string, href: string) {
   return pathname.startsWith(href)
 }
 
-type LanguageSwitcherProps = {
-  value: Language
-  labels: { languageLabel: string; languageEs: string; languageCa: string }
-  onValueChange: (value: Language) => void
-  className?: string
-}
-
 function LanguageSwitcher({
   value,
-  labels,
   onValueChange,
   className,
-}: LanguageSwitcherProps) {
-  const languageOptions = [
-    { value: "es", label: labels.languageEs },
-    { value: "ca", label: labels.languageCa },
-  ]
+}: {
+  value: Language
+  onValueChange: (value: Language) => void
+  className?: string
+}) {
+  const isCa = value === "ca"
 
   return (
-    <div className={cn("relative", className)}>
-      <label htmlFor="site-language" className="sr-only">
-        {labels.languageLabel}
-      </label>
-      <Select value={value} onValueChange={(nextValue) => nextValue && onValueChange(nextValue as Language)}>
-        <SelectTrigger
-          id="site-language"
-          aria-label={labels.languageLabel}
-          className="h-10 min-w-[7.75rem] rounded-none border-0 bg-transparent px-1 pr-0 text-sm font-medium text-slate-700 shadow-none outline-none ring-0 transition hover:bg-transparent hover:text-slate-950 focus-visible:ring-0 data-[popup-open]:text-[#75A5E3]"
-        >
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent
-          align="end"
-          sideOffset={12}
-          className="min-w-[10rem] rounded-2xl border border-black/5 bg-white p-1.5 shadow-[0_20px_45px_rgba(15,23,42,0.12)]"
-        >
-          {languageOptions.map((language) => (
-            <SelectItem
-              key={language.value}
-              value={language.value}
-              className="rounded-xl px-3 py-2 text-sm data-[selected]:bg-[#75A5E3]/12 data-[selected]:text-[#75A5E3]"
-            >
-              {language.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <div
+      className={cn(
+        "relative flex items-center rounded-full border border-black/10 bg-white/70 p-1 backdrop-blur-sm",
+        className
+      )}
+      role="group"
+      aria-label="Seleccionar idioma"
+    >
+      <motion.span
+        className="absolute inset-y-1 w-[calc(50%-2px)] rounded-full bg-[#75A5E3] shadow-sm"
+        animate={{ left: isCa ? "calc(50% + 2px)" : "4px" }}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+      />
+      <button
+        onClick={() => onValueChange("es")}
+        aria-pressed={!isCa}
+        className={cn(
+          "relative z-10 min-w-[2.75rem] rounded-full py-1 text-xs font-bold tracking-wide transition-colors duration-200",
+          !isCa ? "text-white" : "text-slate-500 hover:text-slate-700"
+        )}
+      >
+        CAS
+      </button>
+      <button
+        onClick={() => onValueChange("ca")}
+        aria-pressed={isCa}
+        className={cn(
+          "relative z-10 min-w-[2.75rem] rounded-full py-1 text-xs font-bold tracking-wide transition-colors duration-200",
+          isCa ? "text-white" : "text-slate-500 hover:text-slate-700"
+        )}
+      >
+        CAT
+      </button>
     </div>
   )
 }
@@ -252,7 +243,7 @@ export function SiteHeader() {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          <LanguageSwitcher value={language} labels={copy} onValueChange={setLanguage} />
+          <LanguageSwitcher value={language} onValueChange={setLanguage} />
 
           {isBackofficePanel ? (
             <SignOutButton />
@@ -270,12 +261,7 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center gap-2 md:hidden">
-          <LanguageSwitcher
-            value={language}
-            labels={copy}
-            onValueChange={setLanguage}
-            className="max-w-[9.75rem]"
-          />
+          <LanguageSwitcher value={language} onValueChange={setLanguage} />
 
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger
@@ -315,7 +301,7 @@ export function SiteHeader() {
                   <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                     {copy.languageBlockTitle}
                   </p>
-                  <LanguageSwitcher value={language} labels={copy} onValueChange={setLanguage} />
+                  <LanguageSwitcher value={language} onValueChange={setLanguage} />
                 </div>
 
                 {isBackofficePanel ? (
