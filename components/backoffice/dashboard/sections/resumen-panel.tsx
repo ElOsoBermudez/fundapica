@@ -9,14 +9,20 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock3,
+  Inbox,
   LucideIcon,
+  Mail,
+  MessageSquare,
   Newspaper,
   PencilLine,
+  Phone,
   Plus,
-  ShieldCheck,
   Sparkles,
   Trash2,
+  User,
 } from "lucide-react"
+
+
 
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -51,6 +57,15 @@ type ActivityItem = {
   createdAt: string
   source: "noticia" | "curso"
   detail: string | null
+}
+
+type ContactItem = {
+  id: string
+  nombre: string
+  email: string
+  telefono: string | null
+  mensaje: string | null
+  created_at: string
 }
 
 type CalendarEventType = "reunion" | "publicacion" | "seguimiento"
@@ -137,6 +152,16 @@ function formatShortDate(isoDate: string) {
   })
 }
 
+function formatDateTime(isoDate: string) {
+  return new Date(isoDate).toLocaleString("es-ES", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+}
+
 function sortEvents(events: CalendarEvent[]) {
   return [...events].sort((a, b) => {
     if (a.date === b.date) {
@@ -207,6 +232,7 @@ export function ResumenPanel({
   const [coursesActivity, setCoursesActivity] = useState<ActivityItem[]>([])
   const [totalNews, setTotalNews] = useState(0)
   const [totalCourses, setTotalCourses] = useState(0)
+  const [contacts, setContacts] = useState<ContactItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   const [monthCursor, setMonthCursor] = useState(() => {
@@ -235,6 +261,7 @@ export function ResumenPanel({
         recentCoursesResult,
         newsCountResult,
         coursesCountResult,
+        contactsResult,
       ] = await Promise.all([
         supabase.auth.getUser(),
         supabase
@@ -249,6 +276,11 @@ export function ResumenPanel({
           .limit(4),
         supabase.from("noticias").select("*", { count: "exact", head: true }),
         supabase.from("cursos").select("*", { count: "exact", head: true }),
+        supabase
+          .from("contactos")
+          .select("id, nombre, email, telefono, mensaje, created_at")
+          .order("created_at", { ascending: false })
+          .limit(20),
       ])
 
       if (!isMounted) return
@@ -256,6 +288,7 @@ export function ResumenPanel({
       setUserEmail(authResult.data.user?.email ?? null)
       setTotalNews(newsCountResult.count ?? 0)
       setTotalCourses(coursesCountResult.count ?? 0)
+      setContacts((contactsResult.data ?? []) as ContactItem[])
 
       setNewsActivity(
         (recentNewsResult.data ?? []).map((item) => ({
@@ -477,48 +510,75 @@ export function ResumenPanel({
           </CardContent>
         </Card>
 
-        <Card className="border-white/70 bg-white/95 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
+        <Card className="flex flex-col border-white/70 bg-white/95 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
           <CardHeader className="gap-3">
-            <div className="inline-flex size-12 items-center justify-center rounded-2xl bg-[#75A5E3]/12 text-[#75A5E3]">
-              <CalendarDays className="size-6" />
+            <div className="flex items-center justify-between">
+              <div className="inline-flex size-12 items-center justify-center rounded-2xl bg-[#E05780]/12 text-[#E05780]">
+                <Inbox className="size-6" />
+              </div>
+              {!isLoading && contacts.length > 0 && (
+                <span className="inline-flex items-center rounded-full bg-[#E05780]/10 px-3 py-1 text-xs font-semibold text-[#E05780]">
+                  {contacts.length} contacto{contacts.length === 1 ? "" : "s"}
+                </span>
+              )}
             </div>
-            <CardTitle className="text-xl">Panorama del dia</CardTitle>
+            <CardTitle className="text-xl">Contactos recibidos</CardTitle>
+            <CardDescription className="leading-6">
+              Mensajes enviados desde el formulario publico de contacto.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="rounded-3xl border border-black/5 bg-slate-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
-                Actividad reciente
-              </p>
-              <div className="mt-3 space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="inline-flex items-center gap-2 text-slate-600">
-                    <Newspaper className="size-4 text-[#75A5E3]" />
-                    Noticias
-                  </span>
-                  <span className="font-semibold text-slate-950">{newsActivity.length}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="inline-flex items-center gap-2 text-slate-600">
-                    <BookOpenCheck className="size-4 text-[#E05780]" />
-                    Cursos
-                  </span>
-                  <span className="font-semibold text-slate-950">{coursesActivity.length}</span>
-                </div>
+          <CardContent className="flex-1">
+            {isLoading ? (
+              <div className="space-y-3">
+                {[1, 2].map((i) => (
+                  <div key={i} className="h-24 animate-pulse rounded-3xl bg-slate-100" />
+                ))}
               </div>
-            </div>
+            ) : contacts.length === 0 ? (
+              <div className="rounded-3xl border border-dashed border-black/10 bg-slate-50 px-4 py-10 text-center text-sm text-slate-500">
+                Aun no hay contactos recibidos.
+              </div>
+            ) : (
+              <div className="max-h-[420px] space-y-3 overflow-y-auto pr-1">
+                {contacts.map((contact) => (
+                  <div
+                    key={contact.id}
+                    className="rounded-3xl border border-black/5 bg-slate-50 p-4"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-950">
+                        <User className="size-3.5 text-[#E05780]" />
+                        {contact.nombre}
+                      </span>
+                      <span className="flex items-center gap-1 text-xs text-slate-400">
+                        <CalendarDays className="size-3" />
+                        {formatDateTime(contact.created_at)}
+                      </span>
+                    </div>
 
-            <div className="rounded-3xl border border-dashed border-[#75A5E3]/30 bg-[#75A5E3]/6 p-4">
-              <div className="flex items-start gap-3">
-                <ShieldCheck className="mt-0.5 size-5 text-[#75A5E3]" />
-                <div>
-                  <p className="font-semibold text-slate-950">Sobre el historial</p>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    Ahora mismo el resumen muestra altas recientes. Si quieres ver ediciones reales,
-                    el siguiente paso es añadir `updated_at` o una tabla de auditoria.
-                  </p>
-                </div>
+                    <div className="mt-2 space-y-1">
+                      <p className="inline-flex items-center gap-1.5 text-xs text-slate-500">
+                        <Mail className="size-3 shrink-0" />
+                        {contact.email}
+                      </p>
+                      {contact.telefono && (
+                        <p className="inline-flex items-center gap-1.5 text-xs text-slate-500">
+                          <Phone className="size-3 shrink-0" />
+                          {contact.telefono}
+                        </p>
+                      )}
+                    </div>
+
+                    {contact.mensaje && (
+                      <div className="mt-3 flex items-start gap-2 rounded-2xl border border-black/5 bg-white px-3 py-2">
+                        <MessageSquare className="mt-0.5 size-3.5 shrink-0 text-[#75A5E3]" />
+                        <p className="text-xs leading-5 text-slate-600">{contact.mensaje}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
-            </div>
+            )}
           </CardContent>
         </Card>
       </section>
