@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { LenisProvider } from "@/components/lenis-provider"
 import { SiteHeader } from "@/components/site-header"
 import { ThemeProvider } from "@/components/theme-provider"
+import { ChatWidget } from "@/components/chat-widget"
 import { LanguageProvider } from "@/lib/i18n/language-context"
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner"
@@ -60,6 +61,7 @@ export default function RootLayout({
               },
             }}
           />
+          <ChatWidget />
         </ThemeProvider>
         </LanguageProvider>
       </body>
