@@ -15,7 +15,7 @@ export default function Section1() {
     >
       {/* Image strictly confined to the right 50% of the viewport — never crosses the centerline */}
       <div
-        className="absolute inset-y-0 right-0 w-1/2"
+        className="pointer-events-none absolute inset-y-0 right-0 w-1/2"
         aria-hidden="true"
         style={{
           backgroundImage: "url('/background-home.webp')",
@@ -26,7 +26,7 @@ export default function Section1() {
       />
 
       {/* Text content inside 1200px container, left 50% only */}
-      <div className="relative z-10 mx-auto flex h-full w-full max-w-[1200px]">
+      <div className="relative mx-auto flex h-full w-full max-w-[1200px]">
         <div className="flex w-1/2 items-start pt-16 sm:pt-20 lg:pt-24 xl:pt-28">
           <div className="w-full max-w-[32rem] space-y-6 pl-6 sm:pl-8 lg:pl-10">
             <h1

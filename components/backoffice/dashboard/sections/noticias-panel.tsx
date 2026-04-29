@@ -5,7 +5,7 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/client"
 import type { Categoria } from "@/lib/supabase/types"
 import { AlertDialog } from "@base-ui/react/alert-dialog"
 import { motion } from "motion/react"
-import { PlusCircle, Pencil, Trash2 } from "lucide-react"
+import { Loader2, PlusCircle, Pencil, Trash2 } from "lucide-react"
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
@@ -45,6 +45,7 @@ export function NoticiasPanel() {
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [translating, setTranslating] = useState(false)
   const [noticias, setNoticias] = useState<NoticiaCard[]>([])
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editorKey, setEditorKey] = useState(0)
@@ -159,7 +160,7 @@ export function NoticiasPanel() {
     }
   }
 
-  const autoTranslate = async (id: string, tituloOrig: string, contenidoOrig: string | null) => {
+  const autoTranslate = async (id: string, tituloOrig: string, contenidoOrig: string | null): Promise<boolean> => {
     try {
       const res = await fetch("/api/translate", {
         method: "POST",
@@ -170,7 +171,7 @@ export function NoticiasPanel() {
         }),
       })
       const { translated } = await res.json()
-      if (!translated) return
+      if (!translated) return false
       const supabase = createBrowserSupabaseClient()
       const { error: updateError } = await supabase
         .from("noticias")
@@ -180,9 +181,9 @@ export function NoticiasPanel() {
         })
         .eq("id", id)
       if (updateError) throw updateError
-      toast.success("Traducción al catalán generada automáticamente")
+      return true
     } catch {
-      toast.error("No se pudo generar la traducción al catalán")
+      return false
     }
   }
 
@@ -202,7 +203,6 @@ export function NoticiasPanel() {
         })
         .eq("id", editingId)
       if (!error) {
-        toast.success("Noticia actualizada correctamente")
         setNoticias((prev) => prev.map((n) =>
           n.id === editingId ? {
             ...n,
@@ -214,9 +214,19 @@ export function NoticiasPanel() {
           } : n
         ))
         const savedId = editingId
+        const tituloFinal = titulo.trim()
+        const contenidoFinal = contenido || null
         resetForm()
-        autoTranslate(savedId, titulo.trim(), contenido || null)
+        setSaving(false)
+        setTranslating(true)
+        const ok = await autoTranslate(savedId, tituloFinal, contenidoFinal)
+        setTranslating(false)
+        toast.success(ok
+          ? "Noticia actualizada y traducida al catalán"
+          : "Noticia actualizada. No se pudo generar la traducción al catalán."
+        )
       } else {
+        setSaving(false)
         toast.error("Error al actualizar la noticia")
       }
     } else {
@@ -231,7 +241,6 @@ export function NoticiasPanel() {
         .select()
         .single()
       if (!error && data) {
-        toast.success("¡Felicidades! Tu noticia ha sido creada")
         const nueva: NoticiaCard = {
           id: data.id,
           titulo: titulo.trim(),
@@ -243,13 +252,22 @@ export function NoticiasPanel() {
           isNew: true,
         }
         setNoticias((prev) => [nueva, ...prev.map(n => ({ ...n, isNew: false }))])
+        const tituloFinal = titulo.trim()
+        const contenidoFinal = contenido || null
         resetForm()
-        autoTranslate(data.id, titulo.trim(), contenido || null)
+        setSaving(false)
+        setTranslating(true)
+        const ok = await autoTranslate(data.id, tituloFinal, contenidoFinal)
+        setTranslating(false)
+        toast.success(ok
+          ? "¡Noticia publicada y traducida al catalán!"
+          : "Noticia publicada. No se pudo generar la traducción al catalán."
+        )
       } else {
+        setSaving(false)
         toast.error("Error al guardar la noticia, inténtalo de nuevo")
       }
     }
-    setSaving(false)
   }
 
   const noticiasFiltradas = noticias
@@ -260,6 +278,19 @@ export function NoticiasPanel() {
 
   return (
     <div className="flex flex-col gap-6 lg:flex-row">
+      {translating && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-md">
+          <div className="flex flex-col items-center gap-5 rounded-3xl bg-white/95 px-10 py-8 shadow-[0_24px_60px_rgba(15,23,42,0.18)]">
+            <div className="flex size-16 items-center justify-center rounded-full bg-[#75A5E3]/12">
+              <Loader2 className="size-8 animate-spin text-[#75A5E3]" />
+            </div>
+            <div className="space-y-1 text-center">
+              <p className="text-base font-semibold text-slate-950">Generando traducción al catalán</p>
+              <p className="text-sm text-slate-500">Por favor, espera. Esto puede tardar unos segundos.</p>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="flex-1">
         <h2 className="mb-6 text-3xl font-extrabold tracking-[-0.03em] text-[#000000]">
           {editingId ? "Editar noticia" : "Crear nueva noticia/post"}
