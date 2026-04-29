@@ -129,7 +129,7 @@ export const messages = {
       quality: "Política de calidad",
     },
     contact: {
-      cardTitle: "Contacta con nosotros",
+      cardTitle: "¿Quieres preguntar algo?",
       cardDescription: "Cuentanos que necesitas y te responderemos lo antes posible.",
       name: "Nombre",
       namePlaceholder: "Tu nombre",
@@ -277,7 +277,7 @@ export const messages = {
       quality: "Política de qualitat",
     },
     contact: {
-      cardTitle: "Contacta amb nosaltres",
+      cardTitle: "Vols preguntar alguna cosa?",
       cardDescription: "Explica'ns què necessites i et respondrem al més aviat possible.",
       name: "Nom",
       namePlaceholder: "El teu nom",

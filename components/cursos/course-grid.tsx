@@ -91,7 +91,12 @@ export function CourseGrid({ type, eyebrow, category }: CourseGridProps) {
                     </Badge>
                   </div>
                   <CardTitle className="font-sans text-2xl font-bold tracking-[-0.04em] text-[#E05780]">
-                    {course.title}
+                    <Link
+                      href={`/frontend/cursos/${type}/${category.slug}/${course.id}`}
+                      className="inline-block cursor-pointer transition-colors hover:text-[#75A5E3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#75A5E3] focus-visible:ring-offset-2"
+                    >
+                      {course.title}
+                    </Link>
                   </CardTitle>
                   <CardDescription className="font-[family:var(--font-body)] text-sm leading-6 text-black/60">
                     {course.description}

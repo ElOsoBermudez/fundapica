@@ -40,7 +40,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
     .limit(3)
 
   return (
-    <div className="bg-white">
+    <div className="bg-background">
       <div className="mx-auto max-w-[1200px] px-6 py-12 sm:px-8 lg:px-10 lg:py-16">
         <Link
           href="/news"

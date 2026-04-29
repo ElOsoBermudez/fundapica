@@ -39,7 +39,7 @@ export default async function EmpresasCategoriaPage({ params }: EmpresasCategori
   }
 
   return (
-    <main className="min-h-[calc(100svh-4.5rem)] bg-white">
+    <main className="min-h-[calc(100svh-4.5rem)] bg-background">
       <CourseGrid type="empresas" eyebrow="Empresas" category={category} />
     </main>
   )

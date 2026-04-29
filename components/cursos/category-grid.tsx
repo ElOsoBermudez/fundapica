@@ -75,7 +75,12 @@ export function CourseCategoryGrid({
             >
               <CardHeader className="px-6 pt-6">
                 <CardTitle className="font-sans text-[32px] font-bold tracking-[-0.04em] text-[#E05780]">
-                  {category.title}
+                  <Link
+                    href={`/frontend/cursos/${type}/${category.slug}`}
+                    className="inline-block cursor-pointer transition-colors hover:text-[#75A5E3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#75A5E3] focus-visible:ring-offset-2"
+                  >
+                    {category.title}
+                  </Link>
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-6 pb-6">

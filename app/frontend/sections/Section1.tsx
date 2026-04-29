@@ -10,7 +10,7 @@ export default function Section1() {
 
   return (
     <section
-      className="relative min-h-[600px] w-full min-w-[1200px] overflow-hidden bg-white"
+      className="relative min-h-[600px] w-full min-w-[1200px] overflow-hidden bg-background"
       style={{ height: "calc(100svh - 4rem)" }}
     >
       {/* Image strictly confined to the right 50% of the viewport — never crosses the centerline */}

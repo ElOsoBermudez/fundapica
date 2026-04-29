@@ -32,7 +32,7 @@ export default async function NewsPage() {
   const categories = ["Todas", ...Array.from(new Set(items.map((i) => i.category)))]
 
   return (
-    <div className="bg-white">
+    <div className="bg-background">
       <div className="mx-auto max-w-[1200px] px-6 py-12 sm:px-8 lg:px-10 lg:py-16">
         <NewsList items={items} categories={categories} />
       </div>

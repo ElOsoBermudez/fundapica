@@ -84,7 +84,7 @@ export default function ContactoPage() {
   }
 
   return (
-    <main className="min-h-[calc(100svh-4.5rem)] bg-white">
+    <main className="min-h-[calc(100svh-4.5rem)] bg-background">
       <section className="mx-auto grid max-w-5xl gap-8 px-4 py-24 md:grid-cols-2 md:items-center md:gap-12 md:py-28">
         <Card className="border-foreground/10 shadow-sm">
           <CardHeader className="space-y-2">

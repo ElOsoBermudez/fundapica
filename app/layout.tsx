@@ -42,7 +42,7 @@ export default function RootLayout({
         "font-sans",
       )}
     >
-      <body>
+      <body className="bg-background text-foreground">
         <LenisProvider />
         <LanguageProvider>
         <ThemeProvider>

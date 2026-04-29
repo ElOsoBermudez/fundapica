@@ -22,7 +22,7 @@ export default function SectionCourseAssistant() {
   ]
 
   return (
-    <section className="w-full bg-white px-6 py-16 sm:px-8 lg:px-10 lg:py-24">
+    <section className="w-full bg-background px-6 py-16 sm:px-8 lg:px-10 lg:py-24">
       <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-slate-100 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
           <Image

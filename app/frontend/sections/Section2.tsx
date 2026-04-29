@@ -33,7 +33,7 @@ export default function Section2() {
   const copy = getMessages(language).home.section2
 
   return (
-    <section className="w-full bg-white px-6 py-24 sm:px-8 lg:px-10 lg:py-28">
+    <section className="w-full bg-background px-6 py-24 sm:px-8 lg:px-10 lg:py-28">
       <div className="mx-auto max-w-[1200px]">
         <header className="mb-14 flex flex-col items-center gap-4 text-center sm:mb-16">
           <span className="h-1 w-18 rounded-full bg-[#E05780]" aria-hidden="true" />

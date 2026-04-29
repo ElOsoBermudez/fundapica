@@ -60,7 +60,12 @@ export function CoursesHeroSelector() {
                 </div>
                 <div className="space-y-2">
                   <CardTitle className="font-sans text-3xl font-bold tracking-[-0.04em] text-[#E05780]">
-                    {audience.title}
+                    <Link
+                      href={`/frontend/cursos/${audience.type}`}
+                      className="inline-block cursor-pointer transition-colors hover:text-[#75A5E3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#75A5E3] focus-visible:ring-offset-2"
+                    >
+                      {audience.title}
+                    </Link>
                   </CardTitle>
                   <CardDescription className="max-w-xl font-[family:var(--font-body)] text-base leading-6 text-black/65">
                     {audience.description}

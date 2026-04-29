@@ -13,7 +13,7 @@ export default function Section3() {
   const copy = getMessages(language).home.section3
 
   return (
-    <section className="w-full bg-white px-6 py-24 sm:px-8 lg:px-10 lg:py-28">
+    <section className="w-full bg-background px-6 py-24 sm:px-8 lg:px-10 lg:py-28">
       <div className="mx-auto flex max-w-[1200px] flex-col gap-24">
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
           <div className="relative aspect-[1.02/1] w-full max-w-[460px] justify-self-start overflow-hidden rounded-[36px] bg-[#f6f7fb] shadow-[0_18px_40px_rgba(17,17,17,0.08)]">

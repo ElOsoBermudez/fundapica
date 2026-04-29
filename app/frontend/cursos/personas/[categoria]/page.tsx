@@ -39,7 +39,7 @@ export default async function PersonasCategoriaPage({ params }: PersonasCategori
   }
 
   return (
-    <main className="min-h-[calc(100svh-4.5rem)] bg-white">
+    <main className="min-h-[calc(100svh-4.5rem)] bg-background">
       <CourseGrid type="personas" eyebrow="Personas" category={category} />
     </main>
   )

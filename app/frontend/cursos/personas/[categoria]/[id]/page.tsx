@@ -29,7 +29,7 @@ export default async function PersonasCursoDetailPage({ params }: Props) {
   if (catNombre && slugify(catNombre) !== categoria) notFound()
 
   return (
-    <main className="bg-white">
+    <main className="bg-background">
       <div className="mx-auto max-w-[1200px] px-6 py-12 sm:px-8 lg:px-10 lg:py-16">
         <Link
           href={`/frontend/cursos/personas/${categoria}`}
