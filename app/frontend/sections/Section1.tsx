@@ -10,20 +10,27 @@ export default function Section1() {
 
   return (
     <section
-      className="min-h-[600px] w-screen min-w-[1200px] overflow-hidden bg-white"
-      style={{
-        height: "calc(100svh - 4rem)",
-        backgroundImage: "url('/background-home.webp')",
-        backgroundPosition: "right center",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "auto 100%",
-      }}
+      className="relative min-h-[600px] w-full min-w-[1200px] overflow-hidden bg-white"
+      style={{ height: "calc(100svh - 4rem)" }}
     >
-      <div className="mx-auto flex h-full w-full max-w-[1200px]">
+      {/* Image strictly confined to the right 50% of the viewport — never crosses the centerline */}
+      <div
+        className="absolute inset-y-0 right-0 w-1/2"
+        aria-hidden="true"
+        style={{
+          backgroundImage: "url('/background-home.webp')",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+        }}
+      />
+
+      {/* Text content inside 1200px container, left 50% only */}
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-[1200px]">
         <div className="flex w-1/2 items-start pt-16 sm:pt-20 lg:pt-24 xl:pt-28">
           <div className="w-full max-w-[32rem] space-y-6 pl-6 sm:pl-8 lg:pl-10">
             <h1
-              className="max-w-[10ch] font-bold text-[#E05780] sm:text-5xl lg:text-6xl xl:text-[4.75rem] 2xl:text-[6rem]"
+              className="max-w-[10ch] font-bold text-[#0a0a0a] sm:text-5xl lg:text-6xl xl:text-[4.75rem] 2xl:text-[6rem]"
               style={{ lineHeight: "0.8em", letterSpacing: "-0.03em", fontSize: "7.4em" }}
             >
               <span className="block whitespace-nowrap">
