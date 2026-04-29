@@ -50,6 +50,15 @@ export type Curso = {
   created_at: string;
 };
 
+export type Contacto = {
+  id: string;
+  nombre: string;
+  email: string;
+  telefono: string | null;
+  mensaje: string | null;
+  created_at: string;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -119,6 +128,22 @@ export type Database = {
             referencedColumns: ["id"];
           }
         ];
+      };
+      contactos: {
+        Row: Contacto;
+        Insert: {
+          nombre: string;
+          email: string;
+          telefono?: string | null;
+          mensaje?: string | null;
+        };
+        Update: {
+          nombre?: string;
+          email?: string;
+          telefono?: string | null;
+          mensaje?: string | null;
+        };
+        Relationships: [];
       };
       profiles: {
         Row: Profile;

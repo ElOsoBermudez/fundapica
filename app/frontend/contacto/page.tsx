@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -13,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useLanguage } from "@/lib/i18n/language-context"
 import { getMessages } from "@/lib/i18n/messages"
+import { createBrowserSupabaseClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 
 function Label({
@@ -49,6 +51,37 @@ function Textarea({
 export default function ContactoPage() {
   const { language } = useLanguage()
   const copy = getMessages(language).contact
+  const [nombre, setNombre] = React.useState("")
+  const [correo, setCorreo] = React.useState("")
+  const [telefono, setTelefono] = React.useState("")
+  const [mensaje, setMensaje] = React.useState("")
+  const [loading, setLoading] = React.useState(false)
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!nombre.trim() || !correo.trim()) return
+
+    setLoading(true)
+    const supabase = createBrowserSupabaseClient()
+    const { error } = await supabase.from("contactos").insert({
+      nombre: nombre.trim(),
+      email: correo.trim(),
+      telefono: telefono.trim() || null,
+      mensaje: mensaje.trim() || null,
+    })
+    setLoading(false)
+
+    if (error) {
+      toast.error("No se pudo enviar el mensaje. Inténtalo de nuevo.")
+      return
+    }
+
+    toast.success("Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.")
+    setNombre("")
+    setCorreo("")
+    setTelefono("")
+    setMensaje("")
+  }
 
   return (
     <main className="min-h-[calc(100svh-4.5rem)] bg-white">
@@ -64,10 +97,17 @@ export default function ContactoPage() {
           </CardHeader>
 
           <CardContent>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="space-y-2">
                 <Label htmlFor="nombre">{copy.name}</Label>
-                <Input id="nombre" name="nombre" placeholder={copy.namePlaceholder} required />
+                <Input
+                  id="nombre"
+                  name="nombre"
+                  placeholder={copy.namePlaceholder}
+                  required
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                />
               </div>
 
               <div className="space-y-2">
@@ -78,6 +118,8 @@ export default function ContactoPage() {
                   type="email"
                   placeholder="tu@email.com"
                   required
+                  value={correo}
+                  onChange={(e) => setCorreo(e.target.value)}
                 />
               </div>
 
@@ -88,7 +130,8 @@ export default function ContactoPage() {
                   name="telefono"
                   type="tel"
                   placeholder={copy.phonePlaceholder}
-                  required
+                  value={telefono}
+                  onChange={(e) => setTelefono(e.target.value)}
                 />
               </div>
 
@@ -98,11 +141,13 @@ export default function ContactoPage() {
                   id="mensaje"
                   name="mensaje"
                   placeholder={copy.messagePlaceholder}
+                  value={mensaje}
+                  onChange={(e) => setMensaje(e.target.value)}
                 />
               </div>
 
-              <Button className="w-full sm:w-auto" type="submit">
-                {copy.submit}
+              <Button className="w-full sm:w-auto" type="submit" disabled={loading}>
+                {loading ? "Enviando..." : copy.submit}
               </Button>
             </form>
           </CardContent>

@@ -48,23 +48,18 @@ function LanguageSwitcher({
   return (
     <div
       className={cn(
-        "relative flex items-center rounded-full border border-black/10 bg-white/70 p-1 backdrop-blur-sm",
+        "flex items-center rounded-full border border-black/10 bg-slate-100 p-0.5",
         className
       )}
       role="group"
       aria-label="Seleccionar idioma"
     >
-      <motion.span
-        className="absolute inset-y-1 w-[calc(50%-2px)] rounded-full bg-[#75A5E3] shadow-sm"
-        animate={{ left: isCa ? "calc(50% + 2px)" : "4px" }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      />
       <button
         onClick={() => onValueChange("es")}
         aria-pressed={!isCa}
         className={cn(
-          "relative z-10 min-w-[2.75rem] rounded-full py-1 text-xs font-bold tracking-wide transition-colors duration-200",
-          !isCa ? "text-white" : "text-slate-500 hover:text-slate-700"
+          "rounded-full px-3 py-1 text-xs font-bold tracking-wide transition-all duration-200",
+          !isCa ? "bg-[#75A5E3] text-white shadow-sm" : "text-slate-500 hover:text-slate-700"
         )}
       >
         CAS
@@ -73,8 +68,8 @@ function LanguageSwitcher({
         onClick={() => onValueChange("ca")}
         aria-pressed={isCa}
         className={cn(
-          "relative z-10 min-w-[2.75rem] rounded-full py-1 text-xs font-bold tracking-wide transition-colors duration-200",
-          isCa ? "text-white" : "text-slate-500 hover:text-slate-700"
+          "rounded-full px-3 py-1 text-xs font-bold tracking-wide transition-all duration-200",
+          isCa ? "bg-[#75A5E3] text-white shadow-sm" : "text-slate-500 hover:text-slate-700"
         )}
       >
         CAT
